@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "order-service", url = "http://localhost:8081")
+@FeignClient(name = "order-service")
 public interface OrderServiceFeignClient {
 
     @GetMapping("/api/v1/orders/reservations")

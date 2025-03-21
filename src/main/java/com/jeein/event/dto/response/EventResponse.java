@@ -5,7 +5,6 @@ import com.jeein.event.entity.Event;
 import com.jeein.event.entity.EventDatetime;
 import java.time.Instant;
 import java.util.List;
-
 import lombok.*;
 
 @Getter
@@ -18,6 +17,7 @@ public class EventResponse {
     private String title;
     private String description;
     private String place;
+    private String thumbnail;
     private String artist;
     private List<EventDatetimeResponse> eventDatetimes;
     private Instant eventOpenTime;
@@ -45,6 +45,7 @@ public class EventResponse {
                 .id(event.getId().toString())
                 .title(event.getTitle())
                 .description(event.getDescription())
+                .thumbnail(event.getThumbnail())
                 .place(event.getPlace())
                 .artist(event.getArtist())
                 .eventDatetimes(
@@ -63,6 +64,7 @@ public class EventResponse {
                 .id(event.getId().toString())
                 .title(event.getTitle())
                 .description(event.getDescription())
+                .thumbnail(event.getThumbnail())
                 .place(event.getPlace())
                 .artist(event.getArtist())
                 .eventDatetimes(

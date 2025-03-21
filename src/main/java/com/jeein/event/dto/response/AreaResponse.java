@@ -1,16 +1,14 @@
 package com.jeein.event.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jeein.event.entity.Area;
 import java.util.List;
-
 import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-//@JsonInclude(JsonInclude.Include.NON_EMPTY)
+// @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AreaResponse {
     private String id;
     private String eventId;

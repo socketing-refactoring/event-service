@@ -20,7 +20,8 @@ public enum ErrorCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_001", "서버에 오류가 발생했습니다."),
     UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_002", "파일 업로드에 실패했습니다."),
     REQUEST_MAPPING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_003", "요청 데이터 처리에 실패했습니다."),
-    INVALID_ENTITY_VALUE(HttpStatus.INTERNAL_SERVER_ERROR, "S_004", "데이터베이스에 저장하려고 하는 데이터의 타입을 다시 확인해 주세요."),
+    INVALID_ENTITY_VALUE(
+            HttpStatus.INTERNAL_SERVER_ERROR, "S_004", "데이터베이스에 저장하려고 하는 데이터의 타입을 다시 확인해 주세요."),
     FEIGN_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_005", "마이크로서비스 통신에 오류가 발생했습니다.");
 
     private final String code;

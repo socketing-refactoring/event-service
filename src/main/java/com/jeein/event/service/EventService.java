@@ -119,7 +119,7 @@ public class EventService {
                                             .convertToSeatReservationStatusFromEntity(
                                                     seat, reservationResponse);
                                 })
-                        .collect(Collectors.toList());
+                        .toList();
 
         return CommonResponse.success("좌석 예약 현황 조회 성공", "0", seatReservationStatusResponses);
     }
@@ -144,7 +144,10 @@ public class EventService {
 
         // 공연 저장
         Event event = Event.toEntity(eventRequest, newFileName);
-        event.addEventDatetimes(eventRequest.getEventDatetimes().stream().map(datetime -> EventDatetime.toEntity(datetime, event)).toList());
+        event.addEventDatetimes(
+                eventRequest.getEventDatetimes().stream()
+                        .map(datetime -> EventDatetime.toEntity(datetime, event))
+                        .toList());
 
         List<Area> areas =
                 eventRequest.getAreas().stream()

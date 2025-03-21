@@ -10,15 +10,13 @@ import com.jeein.event.dto.request.ParsedEventRequest;
 import com.jeein.event.dto.response.EventResponse;
 import com.jeein.event.dto.response.FlatSeatResponse;
 import com.jeein.event.dto.response.SeatReservationStatusResponse;
-import com.jeein.event.exception.ErrorCode;
 import com.jeein.event.exception.CustomValidationException;
+import com.jeein.event.exception.ErrorCode;
 import com.jeein.event.service.EventService;
-import java.util.List;
-
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
@@ -71,13 +69,17 @@ public class EventController {
 
     /* 공연 정보 생성 (eventDatetimes, areas, seats 포함) */
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse<EventResponse>> createEvent(@Valid EventRequest request) throws JsonProcessingException {
-        List<AreaRequest> areaList = objectMapper.readValue(request.getAreas(), new TypeReference<List<AreaRequest>>() {});
+    public ResponseEntity<CommonResponse<EventResponse>> createEvent(@Valid EventRequest request)
+            throws JsonProcessingException {
+        List<AreaRequest> areaList =
+                objectMapper.readValue(
+                        request.getAreas(), new TypeReference<List<AreaRequest>>() {});
 
         BindException bindException = new BindException(areaList, "areaList");
         ValidationUtils.invokeValidator(validator, areaList, bindException);
         if (bindException.hasErrors()) {
-            throw new CustomValidationException(ErrorCode.INVALID_REQUEST_VALUE, bindException.getBindingResult());
+            throw new CustomValidationException(
+                    ErrorCode.INVALID_REQUEST_VALUE, bindException.getBindingResult());
         }
 
         ParsedEventRequest parsedEvent = ParsedEventRequest.parse(request);

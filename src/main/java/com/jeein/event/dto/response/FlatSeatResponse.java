@@ -1,6 +1,5 @@
 package com.jeein.event.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.jeein.event.entity.Seat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

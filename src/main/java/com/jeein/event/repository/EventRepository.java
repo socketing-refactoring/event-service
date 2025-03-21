@@ -23,7 +23,8 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @Query("SELECT e FROM Event e WHERE e.title = :title AND e.deletedAt IS NULL")
     Optional<Event> findByTitle(String title);
 
-    @Modifying // Query executed via 'getResultList()' or 'getSingleResult()' must be a 'select' query
+    @Modifying // Query executed via 'getResultList()' or 'getSingleResult()' must be a 'select'
+    // query
     @Query("UPDATE Event e SET e.deletedAt = :deletedAt WHERE e.id = :eventId")
     void softDeleteEvent(@Param("eventId") UUID eventId, @Param("deletedAt") Instant deletedAt);
 }
