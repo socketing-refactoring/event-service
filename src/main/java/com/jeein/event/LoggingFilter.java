@@ -43,7 +43,11 @@ public class LoggingFilter extends OncePerRequestFilter {
                     request.getMethod(),
                     new String(requestBody, StandardCharsets.UTF_8));
         } else {
-            log.info("request: Body too large to log");
+            log.info(
+                    "request : {uri: {}, method: {}, body: request body is too large to log}",
+                    request.getRequestURI(),
+                    request.getMethod()
+            );
         }
 
         byte[] responseBody = responseWrapper.getContentAsByteArray();
@@ -53,7 +57,9 @@ public class LoggingFilter extends OncePerRequestFilter {
                     response.getStatus(),
                     new String(responseBody, StandardCharsets.UTF_8));
         } else {
-            log.info("response: Body too large to log");
+            log.info(
+                    "response : {status: {}, body: response body is too large to log}",
+                    response.getStatus());
         }
 
         responseWrapper.copyBodyToResponse();

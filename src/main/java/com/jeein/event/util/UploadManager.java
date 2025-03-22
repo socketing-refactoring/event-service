@@ -33,11 +33,11 @@ public class UploadManager {
         String newFileName = generateNewFileName(thumbnail, title);
 
         File uploadDirectory = resourceLoader.getResource("file://" + uploadPath).getFile();
-        log.info("uploadDirectory is {}", uploadDirectory);
+        log.debug("uploadDirectory: {}", uploadDirectory);
 
         Path path = Paths.get(uploadDirectory.getAbsolutePath());
         Path savePath = path.resolve(newFileName);
-        log.info("savePath is {}", savePath);
+        log.debug("savePath: {}", savePath);
 
         Files.copy(thumbnail.getInputStream(), savePath);
         log.info("File uploaded successfully with name: {}", newFileName);
@@ -48,12 +48,12 @@ public class UploadManager {
         if (thumbnail.isEmpty() || thumbnail.getSize() < 0) {
             throw new EventException(ErrorCode.INVALID_MULTIPARTFILE);
         }
-        log.info(thumbnail.getContentType());
+        log.debug(thumbnail.getContentType());
     }
 
     private String generateNewFileName(MultipartFile thumbnail, String title) {
         String originalFileName = thumbnail.getOriginalFilename();
-        log.info("originalFilename is {}", originalFileName);
+        log.debug("originalFilename: {}", originalFileName);
 
         int lastIndexOfDot = originalFileName.lastIndexOf(".");
         String extension = originalFileName.substring(lastIndexOfDot);
