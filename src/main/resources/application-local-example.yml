@@ -2,7 +2,7 @@ server:
   port: 8082
 
 upload:
-  path: /upload/socketing/thumbnails
+  path: /app/upload/thumbnails
 
 spring:
   output:
@@ -34,32 +34,22 @@ spring:
         highlight_sql: true
 
 logging:
-  level:
-    root: debug
-    org.hibernate.SQL: debug
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
-    org.springframework.orm.jpa: debug
-    org.springframework.transaction: debug
-    org.springframework.web: debug
-    org.springframework.web.servlet: debug
-    org.springframework.web.client: debug
-    org.springframework.boot.web: debug
-    org.springframework.web.filter.CommonsRequestLoggingFilter: trace
+  config: classpath:logback-spring.xml
 
 management:
   endpoints:
     web:
       exposure:
         include: "*"
+
 springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json
-  show-actuator: true
+  show-actuator: false
   api-docs:
-    path: /apis
+    path: /api/v1/events/api/json
   swagger-ui:
-    path: /api-docs
-    url: /apis
+    path: /api/v1/events/api/docs
     operations-sorter: alpha
     disable-swagger-default-url: false
     display-request-duration: true

@@ -1,16 +1,8 @@
-# docker network create event-network
 services:
   event-service:
     image: ${DOCKER_USERNAME}/socketing:event-service
     network_mode: host
     container_name: event-service-app
-    ports:
-      - "8082:8082"
-    networks:
-      - event-network
     volumes:
       - ./logs:/app/logs
-
-networks:
-  event-network:
-    external: true
+      - ./upload/thumbnails:/app/upload/thumbnails/

@@ -16,14 +16,16 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 @Component
 public class LoggingFilter extends OncePerRequestFilter {
 
-    private static final String SWAGGER_PATH = "/swagger";
+    private static final String SWAGGER_PATH = "/api/v1/events/api/";
+    private static final long MAX_LOG_SIZE = 1024 * 100;
+    private static final String ACTUATOR_PATH = "/actuator";
 
     @Override
     protected void doFilterInternal(
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (isSwaggerRequest(request)) {
+        if (isSwaggerRequest(request) || isActuatorRequest(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -34,17 +36,36 @@ public class LoggingFilter extends OncePerRequestFilter {
         filterChain.doFilter(requestWrapper, responseWrapper);
 
         byte[] requestBody = requestWrapper.getContentAsByteArray();
-        log.info("request : " + new String(requestBody, StandardCharsets.UTF_8));
+        if (requestBody.length <= MAX_LOG_SIZE) {
+            log.info(
+                    "request : {uri: {}, method: {}, body: {}}",
+                    request.getRequestURI(),
+                    request.getMethod(),
+                    new String(requestBody, StandardCharsets.UTF_8));
+        } else {
+            log.info("request: Body too large to log");
+        }
 
         byte[] responseBody = responseWrapper.getContentAsByteArray();
-        log.info("response : " + new String(responseBody, StandardCharsets.UTF_8));
+        if (responseBody.length <= MAX_LOG_SIZE) {
+            log.info(
+                    "response : {status: {}, body: {}}",
+                    response.getStatus(),
+                    new String(responseBody, StandardCharsets.UTF_8));
+        } else {
+            log.info("response: Body too large to log");
+        }
 
         responseWrapper.copyBodyToResponse();
     }
 
-    // Helper method to check if the request is for Swagger endpoints
     private boolean isSwaggerRequest(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         return requestURI.contains(SWAGGER_PATH);
+    }
+
+    private boolean isActuatorRequest(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return requestURI.contains(ACTUATOR_PATH);
     }
 }
