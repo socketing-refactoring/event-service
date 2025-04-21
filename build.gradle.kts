@@ -1,11 +1,15 @@
+import com.diffplug.spotless.extra.wtp.EclipseWtpFormatterStep
+
 plugins {
-    java
+    id("java")
     id("org.springframework.boot") version "3.4.3"
     id("io.spring.dependency-management") version "1.1.7"
     id("com.diffplug.spotless") version "7.0.2"
+    id("checkstyle")
+    id("org.ec4j.editorconfig") version "0.1.0"
 }
 
-group = "com.example"
+group = "com.jeein"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -29,19 +33,27 @@ spotless {
         endWithNewline()
     }
 
-    val prettierConfig by extra("$rootDir/.prettierrc.yml")
-
-    format("markdown") {
-        target("**/*.md", "*.md")
-
-        prettier().configFile(prettierConfig)
+    yaml {
+        target("**/*.yml", "**/*.yaml")
+        jackson()
+                .yamlFeature("ALWAYS_QUOTE_NUMBERS_AS_STRINGS", false)
+                .yamlFeature("WRITE_DOC_START_MARKER", false)
+                .yamlFeature("INDENT_ARRAYS_WITH_INDICATOR", true)
     }
 
-    format("yaml") {
-        target("*.yml", "src/main/resources/*.yml")
+    format("xml") {
+        target("**/*.xml")
 
-        prettier().configFile(prettierConfig)
+        eclipseWtp(EclipseWtpFormatterStep.XML)
     }
+}
+
+checkstyle {
+    toolVersion = "10.23.0"
+}
+
+editorconfig {
+    excludes = listOf("build")
 }
 
 repositories {
@@ -69,22 +81,33 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
+
+    // For Gradle
+    implementation("com.diffplug.spotless:spotless-lib-extra:3.1.1")
+}
+
+// CheckStyle Task Configuration
+tasks.withType<Checkstyle>().configureEach {
+    reports {
+        xml.required = false
+        html.required = true
+    }
+}
+
+tasks.named("checkstyleMain") {
+    dependsOn("spotlessApply")
+}
+
+tasks.named("checkstyleTest") {
+    dependsOn("spotlessApply")
+}
+
+tasks.named("spotlessApply") {
+    dependsOn("editorconfigFormat")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
-}
-
-tasks.register("lintCheck") {
-    dependsOn("spotlessCheck")
-
-    doLast {
-        println("\u001B[32m✔ Lint check completed successfully!\u001B[0m")
-    }
-}
-
-tasks.register("lintApply") {
-    dependsOn("spotlessApply")
 }
 
 tasks.jar {
@@ -94,3 +117,4 @@ tasks.jar {
 tasks.bootJar {
     archiveFileName.set("event-service.jar")
 }
+
