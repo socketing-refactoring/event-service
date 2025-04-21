@@ -36,9 +36,9 @@ spotless {
     yaml {
         target("**/*.yml", "**/*.yaml")
         jackson()
-                .yamlFeature("ALWAYS_QUOTE_NUMBERS_AS_STRINGS", false)
-                .yamlFeature("WRITE_DOC_START_MARKER", false)
-                .yamlFeature("INDENT_ARRAYS_WITH_INDICATOR", true)
+            .yamlFeature("ALWAYS_QUOTE_NUMBERS_AS_STRINGS", false)
+            .yamlFeature("WRITE_DOC_START_MARKER", false)
+            .yamlFeature("INDENT_ARRAYS_WITH_INDICATOR", true)
     }
 
     format("xml") {
@@ -117,4 +117,3 @@ tasks.jar {
 tasks.bootJar {
     archiveFileName.set("event-service.jar")
 }
-

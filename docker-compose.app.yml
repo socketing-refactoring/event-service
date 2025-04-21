@@ -1,8 +1,8 @@
 services:
   event-service:
-    image: ${DOCKER_USERNAME}/socketing:event-service
-    network_mode: host
-    container_name: event-service-app
+    image: "${DOCKER_USERNAME}/socketing:event-service"
+    network_mode: "host"
+    container_name: "event-service-app"
     volumes:
-      - ./logs:/app/logs
-      - ./upload/thumbnails:/app/upload/thumbnails/
+      - "./logs:/app/logs"
+      - "./upload/thumbnails:/app/upload/thumbnails/"

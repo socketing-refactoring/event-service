@@ -69,8 +69,7 @@ public class EventController {
 
     /* 단일 공연 일정별 좌석 예약 현황 조회 (area 정보 미포함) */
     @GetMapping("/{eventId}/dates/{eventDatetimeId}/seat-reservation")
-    public ResponseEntity<CommonResponse<List<SeatReservationResponse>>>
-    getEventSeatReservations(
+    public ResponseEntity<CommonResponse<List<SeatReservationResponse>>> getEventSeatReservations(
             @PathVariable String eventId, @PathVariable String eventDatetimeId) {
         return ResponseEntity.ok(eventService.getEventSeatReservations(eventId, eventDatetimeId));
     }
@@ -80,7 +79,8 @@ public class EventController {
     public ResponseEntity<CommonResponse<List<SeatReservationDeatilResponse>>>
             getEventSeatReservationDetails(
                     @PathVariable String eventId, @PathVariable String eventDatetimeId) {
-        return ResponseEntity.ok(eventService.getEventSeatReservationDetails(eventId, eventDatetimeId));
+        return ResponseEntity.ok(
+                eventService.getEventSeatReservationDetails(eventId, eventDatetimeId));
     }
 
     /* 단일 공연 수입 */

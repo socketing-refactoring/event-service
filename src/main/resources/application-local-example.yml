@@ -1,55 +1,48 @@
 server:
   port: 8082
-
 upload:
-  path: /app/upload/thumbnails
-
+  path: "/app/upload/thumbnails"
 spring:
   output:
     ansi:
-      enabled: ALWAYS
+      enabled: "ALWAYS"
   servlet:
     multipart:
       enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
-
+      max-file-size: "10MB"
+      max-request-size: "10MB"
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/event_domain
-    username: username
-    password: password
+    driver-class-name: "org.postgresql.Driver"
+    url: "jdbc:postgresql://localhost:5432/event_domain"
+    username: "username"
+    password: "password"
     hikari:
       minimum-idle: 5
       maximum-pool-size: 20
-
   jpa:
-    database: postgresql
+    database: "postgresql"
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: "create"
     properties:
       hibernate:
         format_sql: true
         highlight_sql: true
-
 logging:
-  config: classpath:logback-spring.xml
-
+  config: "classpath:logback-spring.xml"
 management:
   endpoints:
     web:
       exposure:
         include: "*"
-
 springdoc:
-  default-consumes-media-type: application/json
-  default-produces-media-type: application/json
+  default-consumes-media-type: "application/json"
+  default-produces-media-type: "application/json"
   show-actuator: false
   api-docs:
-    path: /api/v1/events/api/json
+    path: "/api/v1/events/api/json"
   swagger-ui:
-    path: /api/v1/events/api/docs
-    operations-sorter: alpha
+    path: "/api/v1/events/api/docs"
+    operations-sorter: "alpha"
     disable-swagger-default-url: false
     display-request-duration: true

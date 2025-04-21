@@ -138,8 +138,7 @@ public class EventService {
                                 seat -> {
                                     ReservationResponse reservationResponse =
                                             reservationMap.get(seat.getId().toString());
-                                    return SeatReservationResponse
-                                            .of(seat, reservationResponse);
+                                    return SeatReservationResponse.of(seat, reservationResponse);
                                 })
                         .toList();
 
@@ -164,28 +163,27 @@ public class EventService {
                     Optional.ofNullable(orderServiceResponse)
                             .map(response -> response.getBody())
                             .map(CommonResponse::getMessage)
-                            .orElse("주문 서비스 응답 오류")
-            );
+                            .orElse("주문 서비스 응답 오류"));
 
             log.error(
                     "Error errors: {}",
                     Optional.ofNullable(orderServiceResponse)
                             .map(orderService -> orderService.getBody())
                             .map(CommonResponse::getErrors)
-                            .orElse(new ArrayList<>())
-            );
+                            .orElse(new ArrayList<>()));
 
             throw new OrderServiceFeignClientException(ErrorCode.FEIGN_CONNECTION_ERROR);
         }
 
-        Map<String, ReservationResponse> reservationMap = Optional.ofNullable(orderServiceResponse.getBody())
-                .map(CommonResponse::getData)
-                .orElse(Collections.emptyList())  // getData()가 null일 경우 빈 리스트 반환
-                .stream()
-                .collect(Collectors.toMap(
-                        ReservationResponse::getSeatId,
-                        reservationResponse -> reservationResponse
-                ));
+        Map<String, ReservationResponse> reservationMap =
+                Optional.ofNullable(orderServiceResponse.getBody())
+                        .map(CommonResponse::getData)
+                        .orElse(Collections.emptyList()) // getData()가 null일 경우 빈 리스트 반환
+                        .stream()
+                        .collect(
+                                Collectors.toMap(
+                                        ReservationResponse::getSeatId,
+                                        reservationResponse -> reservationResponse));
 
         List<SeatReservationDeatilResponse> seatReservationStatusResponses =
                 seats.stream()
@@ -193,7 +191,8 @@ public class EventService {
                                 seat -> {
                                     ReservationResponse reservationResponse =
                                             reservationMap.get(seat.getId().toString());
-                                    return SeatReservationDeatilResponse.of(seat, reservationResponse);
+                                    return SeatReservationDeatilResponse.of(
+                                            seat, reservationResponse);
                                 })
                         .toList();
 
@@ -210,9 +209,7 @@ public class EventService {
         ResponseEntity<CommonResponse<List<ReservationResponse>>> orderServiceResponse =
                 orderServiceFeignClient.getReservationsByEventDatetimeId(eventDatetimeId, false);
         if (orderServiceResponse.getStatusCode().isError()) {
-            log.error(
-                    "Error message: {}",
-                    orderServiceResponse.getBody().getMessage());
+            log.error("Error message: {}", orderServiceResponse.getBody().getMessage());
             log.error("Error details: {}", orderServiceResponse.getBody().getErrors());
             throw new OrderServiceFeignClientException(ErrorCode.FEIGN_CONNECTION_ERROR);
         }
