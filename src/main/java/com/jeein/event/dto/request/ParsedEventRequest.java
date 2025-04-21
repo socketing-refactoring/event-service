@@ -31,11 +31,14 @@ public class ParsedEventRequest {
                 .eventOpenTime(request.getEventOpenTime())
                 .ticketingOpenTime(request.getTicketingOpenTime())
                 .totalMap(request.getTotalMap())
-                .eventDatetimes(request.getEventDatetimes())
                 .build();
     }
 
     public void addAreas(List<AreaRequest> areas) {
         this.areas = areas;
+    }
+
+    public void addEventDatetimes(List<Instant> eventDatetimes) {
+        this.eventDatetimes = eventDatetimes;
     }
 }

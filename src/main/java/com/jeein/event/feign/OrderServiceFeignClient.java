@@ -10,9 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "order-service")
 public interface OrderServiceFeignClient {
 
-    @GetMapping("/api/v1/orders/reservations")
-    ResponseEntity<CommonResponse<List<ReservationResponse>>> getReservationsByEvent(
-            @RequestParam String eventId,
+    @GetMapping("/api/v1/orders/reservers")
+    ResponseEntity<CommonResponse<List<ReservationResponse>>> getReservationsByEventDatetimeId(
             @RequestParam String eventDatetimeId,
             @RequestParam(required = false, defaultValue = "false") boolean showCanceled);
 }

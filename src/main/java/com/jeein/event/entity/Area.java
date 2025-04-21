@@ -26,7 +26,9 @@ public class Area extends BaseEntity {
     @Column(nullable = false)
     private int price;
 
-    @Column private String areaMap;
+    @Lob
+    @Column
+    private String areaMap;
 
     @ManyToOne private Event event;
 

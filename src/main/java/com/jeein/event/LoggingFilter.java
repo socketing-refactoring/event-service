@@ -17,7 +17,8 @@ import org.springframework.web.util.ContentCachingResponseWrapper;
 public class LoggingFilter extends OncePerRequestFilter {
 
     private static final String SWAGGER_PATH = "/api/v1/events/api/";
-    private static final long MAX_LOG_SIZE = 1024 * 100;
+    private static final String UPLOAD_PATH = "/upload/";
+    private static final long MAX_LOG_SIZE = 1024 * 10;
     private static final String ACTUATOR_PATH = "/actuator";
 
     @Override
@@ -25,7 +26,7 @@ public class LoggingFilter extends OncePerRequestFilter {
             HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        if (isSwaggerRequest(request) || isActuatorRequest(request)) {
+        if (isSwaggerRequest(request) || isActuatorRequest(request) || isImageRequest(request)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -46,8 +47,7 @@ public class LoggingFilter extends OncePerRequestFilter {
             log.info(
                     "request : {uri: {}, method: {}, body: request body is too large to log}",
                     request.getRequestURI(),
-                    request.getMethod()
-            );
+                    request.getMethod());
         }
 
         byte[] responseBody = responseWrapper.getContentAsByteArray();
@@ -73,5 +73,10 @@ public class LoggingFilter extends OncePerRequestFilter {
     private boolean isActuatorRequest(HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         return requestURI.contains(ACTUATOR_PATH);
+    }
+
+    private boolean isImageRequest(HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        return requestURI.contains(UPLOAD_PATH);
     }
 }

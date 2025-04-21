@@ -16,6 +16,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString(callSuper = true)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "title", "deleted_at"}))
 public class Event extends DeletableEntity {
 
     @Column(nullable = false, length = 20)
@@ -28,6 +29,7 @@ public class Event extends DeletableEntity {
     private String thumbnail;
 
     @Column(nullable = false)
+    @Lob
     private String totalMap;
 
     @Column(nullable = false, length = 20)

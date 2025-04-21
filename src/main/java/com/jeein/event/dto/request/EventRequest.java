@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.Instant;
-import java.util.List;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -45,5 +44,5 @@ public class EventRequest {
     private String areas;
 
     @NotNull(message = "공연 일정을 입력해 주세요.")
-    private List<Instant> eventDatetimes;
+    private String eventDatetimes;
 }

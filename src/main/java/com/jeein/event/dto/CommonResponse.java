@@ -14,7 +14,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommonResponse<T> {
     private String message;
     private String code;
@@ -49,7 +49,7 @@ public class CommonResponse<T> {
     }
 
     public static CommonResponse<Object> error(MethodArgumentTypeMismatchException e) {
-        String value = Optional.of(e.getValue()).map(Object::toString).orElse("");
+        String value = Optional.ofNullable(e.getValue()).map(Object::toString).orElse("");
         List<FieldError> errors = FieldError.of(e.getName(), value, e.getErrorCode());
         return new CommonResponse<>(
                 ErrorCode.INVALID_TYPE_VALUE.getMessage(),

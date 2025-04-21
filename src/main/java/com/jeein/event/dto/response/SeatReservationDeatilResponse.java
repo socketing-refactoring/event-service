@@ -10,38 +10,45 @@ import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @SuperBuilder
-public class SeatReservationStatusResponse extends FlatSeatResponse {
+public class SeatReservationDeatilResponse extends FlatSeatResponse {
 
     private String reservationId;
     private String reserverId;
+    private String reserverName;
     private String reserverEmail;
 
-    public static SeatReservationStatusResponse convertToSeatReservationStatusFromEntity(
+    public static SeatReservationDeatilResponse of(
             Seat seat, ReservationResponse reservationResponse) {
         if (reservationResponse == null) {
-            return SeatReservationStatusResponse.builder()
+            return SeatReservationDeatilResponse.builder()
                     .id(seat.getId().toString())
                     .areaId(seat.getArea().getId().toString())
+                    .areaLabel(seat.getArea().getLabel())
+                    .areaPrice(seat.getArea().getPrice())
                     .cx(seat.getCx())
                     .cy(seat.getCy())
                     .row(seat.getRow())
                     .number(seat.getNumber())
                     .reservationId(null)
                     .reserverId(null)
+                    .reserverName(null)
                     .reserverEmail(null)
                     .build();
         } else {
-            return SeatReservationStatusResponse.builder()
+            return SeatReservationDeatilResponse.builder()
                     .id(seat.getId().toString())
                     .areaId(seat.getArea().getId().toString())
+                    .areaLabel(seat.getArea().getLabel())
+                    .areaPrice(seat.getArea().getPrice())
                     .cx(seat.getCx())
                     .cy(seat.getCy())
                     .row(seat.getRow())
                     .number(seat.getNumber())
                     .reservationId(reservationResponse.getId())
                     .reserverId(reservationResponse.getReserverId())
+                    .reserverName(reservationResponse.getReserverName())
                     .reserverEmail(reservationResponse.getReserverEmail())
                     .build();
         }
