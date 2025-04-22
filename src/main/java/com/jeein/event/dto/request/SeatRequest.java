@@ -9,6 +9,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class SeatRequest {
 
     @NotNull(message = "좌석의 x좌표를 입력해 주세요.")

@@ -1,4 +1,6 @@
 import com.diffplug.spotless.extra.wtp.EclipseWtpFormatterStep
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
+import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
     id("java")
@@ -7,6 +9,7 @@ plugins {
     id("com.diffplug.spotless") version "7.0.2"
     id("checkstyle")
     id("org.ec4j.editorconfig") version "0.1.0"
+    id("org.asciidoctor.jvm.convert") version "4.0.4"
 }
 
 group = "com.jeein"
@@ -56,33 +59,45 @@ editorconfig {
     excludes = listOf("build")
 }
 
+configurations {
+    create("asciidoctorExt")
+}
+
 repositories {
     mavenCentral()
 }
 
 val springCloudVersion = "2024.0.0"
+val snippetsDir = file("build/generated-snippets")
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+//    implementation("org.springframework.cloud:spring-cloud-starter-config")
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation(platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"))
-    implementation("io.micrometer:micrometer-registry-prometheus:1.15.0-M2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
     implementation("org.postgresql:postgresql:42.6.2")
+    implementation("org.mindrot:jbcrypt:0.4")
+    implementation("io.micrometer:micrometer-registry-prometheus:1.15.0-M2")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
+    testImplementation("net.bytebuddy:byte-buddy-agent:1.15.11")
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.18.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
 
     // For Gradle
+    add("asciidoctorExt", "org.springframework.restdocs:spring-restdocs-asciidoctor")
     implementation("com.diffplug.spotless:spotless-lib-extra:3.1.1")
 }
 
@@ -106,14 +121,53 @@ tasks.named("spotlessApply") {
     dependsOn("editorconfigFormat")
 }
 
-tasks.withType<Test> {
+
+// Test Task Configuration (Spring Rest Docs)
+tasks.test {
     useJUnitPlatform()
+
+    // Remove JVM warning message
+    jvmArgs = listOf("-Xshare:off")
+    doFirst {
+        val agentJar =
+            configurations.testRuntimeClasspath
+                .get()
+                .files
+                .find { it.name.contains("byte-buddy-agent") }
+                ?: throw GradleException("Byte Buddy Agent JAR not found")
+
+        jvmArgs("-javaagent:${agentJar.absolutePath}")
+    }
+
+    outputs.dir(snippetsDir)
 }
 
-tasks.jar {
-    enabled = false
-}
+val asciidoctorTask =
+    tasks.named<AsciidoctorTask>("asciidoctor") {
+        inputs.dir(snippetsDir)
+        configurations("asciidoctorExt")
+        dependsOn(tasks.test)
 
-tasks.bootJar {
+        sources(
+            delegateClosureOf<PatternSet> {
+                include("index.adoc")
+            },
+        )
+
+        baseDirFollowsSourceFile() // required to include adoc into index.adoc
+        setOutputDir(layout.buildDirectory.dir("docs/asciidoc/member-service"))
+    }
+
+// Packaging Jar
+tasks.named<BootJar>("bootJar") {
     archiveFileName.set("event-service.jar")
+    dependsOn(asciidoctorTask)
+
+    from(asciidoctorTask.map { it.outputDir }) {
+        into("static/docs")
+    }
+}
+
+tasks.named<Jar>("jar") {
+    enabled = false
 }

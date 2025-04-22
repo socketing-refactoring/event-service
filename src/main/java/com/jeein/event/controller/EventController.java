@@ -1,32 +1,28 @@
 package com.jeein.event.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jeein.event.dto.CommonResponse;
-import com.jeein.event.dto.request.AreaRequest;
 import com.jeein.event.dto.request.EventRequest;
-import com.jeein.event.dto.request.ParsedEventRequest;
 import com.jeein.event.dto.response.AreaReservationStatistics;
 import com.jeein.event.dto.response.EventResponse;
 import com.jeein.event.dto.response.FlatSeatResponse;
 import com.jeein.event.dto.response.SeatReservationDeatilResponse;
 import com.jeein.event.dto.response.SeatReservationResponse;
 import com.jeein.event.dto.response.SeatResponse;
-import com.jeein.event.exception.CustomValidationException;
-import com.jeein.event.exception.ErrorCode;
 import com.jeein.event.service.EventService;
 import jakarta.validation.Valid;
-import java.time.Instant;
+
+import java.net.URI;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindException;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/v1/events")
@@ -106,28 +102,16 @@ public class EventController {
 
     /* 공연 정보 생성 (eventDatetimes, areas, seats 포함) */
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<CommonResponse<EventResponse>> createEvent(@Valid EventRequest request)
+    public ResponseEntity<CommonResponse<EventResponse>> createEvent(
+        @RequestPart("request") @Valid EventRequest request,
+        @RequestPart("thumbnail") MultipartFile thumbnail)
             throws JsonProcessingException {
-        List<AreaRequest> areaList =
-                objectMapper.readValue(
-                        request.getAreas(), new TypeReference<List<AreaRequest>>() {});
+        log.debug(request.toString());
 
-        BindException bindException = new BindException(areaList, "areaList");
-        ValidationUtils.invokeValidator(validator, areaList, bindException);
-        if (bindException.hasErrors()) {
-            throw new CustomValidationException(
-                    ErrorCode.INVALID_REQUEST_VALUE, bindException.getBindingResult());
-        }
-
-        List<Instant> eventDatetimes =
-                objectMapper.readValue(
-                        request.getEventDatetimes(), new TypeReference<List<Instant>>() {});
-
-        ParsedEventRequest parsedEvent = ParsedEventRequest.parse(request);
-        parsedEvent.addAreas(areaList);
-        parsedEvent.addEventDatetimes(eventDatetimes);
-        return ResponseEntity.ok(eventService.saveEvent(parsedEvent));
-    }
+        CommonResponse<EventResponse> response = eventService.saveEvent(request, thumbnail);
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .location(URI.create("/api/v1/events/" + response.getData().getId()))
+            .body(response);    }
 
     /* 단일 공연 삭제 */
     @DeleteMapping("/{eventId}")

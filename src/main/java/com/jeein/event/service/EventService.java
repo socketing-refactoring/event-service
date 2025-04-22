@@ -1,7 +1,8 @@
 package com.jeein.event.service;
 
+import com.jeein.event.ResponseMessage;
 import com.jeein.event.dto.CommonResponse;
-import com.jeein.event.dto.request.ParsedEventRequest;
+import com.jeein.event.dto.request.EventRequest;
 import com.jeein.event.dto.response.AreaReservationStatistics;
 import com.jeein.event.dto.response.EventResponse;
 import com.jeein.event.dto.response.FlatSeatResponse;
@@ -37,6 +38,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -306,7 +308,7 @@ public class EventService {
     }
 
     @Transactional
-    public CommonResponse<EventResponse> saveEvent(ParsedEventRequest eventRequest) {
+    public CommonResponse<EventResponse> saveEvent(EventRequest eventRequest, MultipartFile thumbnail) {
         Optional<Event> existingEvent = eventRepository.findByTitle(eventRequest.getTitle());
         if (existingEvent.isPresent()) {
             throw new EventException(ErrorCode.EVENT_ALREADY_EXISTS);
@@ -316,10 +318,11 @@ public class EventService {
         String newFileName;
         try {
             newFileName =
-                    uploadManager.uploadFile(eventRequest.getThumbnail(), eventRequest.getTitle());
+                    uploadManager.uploadFile(thumbnail, eventRequest.getTitle());
         } catch (MultipartException e) {
             throw new EventException(ErrorCode.INVALID_MULTIPARTFILE);
         } catch (IOException e) {
+            log.debug(e.getMessage());
             throw new UploadException(ErrorCode.UPLOAD_ERROR);
         }
 
@@ -349,7 +352,7 @@ public class EventService {
         EventResponse response = EventResponse.convertToDeatiledEvent(savedEvent);
         log.debug(response.getArtist());
 
-        return CommonResponse.success("공연 등록 성공", "0", response);
+        return CommonResponse.success(ResponseMessage.EVENT_CREATE_SUCCESS, "0", response);
     }
 
     @Transactional

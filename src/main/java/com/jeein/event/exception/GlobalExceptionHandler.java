@@ -30,6 +30,7 @@ public class GlobalExceptionHandler {
             CustomValidationException e) {
         CommonResponse<Object> response =
                 CommonResponse.error(ErrorCode.INVALID_REQUEST_VALUE, e.getBindingResult());
+        log.debug(e.getMessage(), e.getCause());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -37,13 +38,16 @@ public class GlobalExceptionHandler {
     protected ResponseEntity<CommonResponse<Object>> handleMethodArgumentTypeMismatchException(
             MethodArgumentTypeMismatchException e) {
         CommonResponse<Object> response = CommonResponse.error(e);
+        log.debug(e.getMessage(), e.getCause());
+
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     protected ResponseEntity<CommonResponse<Object>> handleMethodArgumentTypeMismatchException(
-            HttpMediaTypeNotSupportedException he) {
-        log.error(he.getMessage());
+            HttpMediaTypeNotSupportedException e) {
+        log.debug(e.getMessage(), e.getCause());
+
         CommonResponse<Object> response = CommonResponse.error(ErrorCode.MULTIPART_NO_BOUNDARY);
         return new ResponseEntity<>(response, ErrorCode.INVALID_CONTENT_TYPE.getStatus());
     }

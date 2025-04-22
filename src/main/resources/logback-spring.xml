@@ -84,8 +84,8 @@
 		</logger>
 	</springProfile>
 
-	<!-- local 프로파일 로깅 설정 -->
-	<springProfile name="local">
+	<!-- test 프로파일 로깅 설정 -->
+	<springProfile name="test">
 		<logger name="org.hibernate.SQL" level="TRACE"
 			additivity="false">
 			<appender-ref ref="CONSOLE" />

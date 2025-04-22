@@ -11,6 +11,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
+@Builder
 public class AreaRequest {
     @NotEmpty(message = "구역 이름을 입력해 주세요.")
     private String label;

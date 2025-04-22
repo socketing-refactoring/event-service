@@ -1,6 +1,6 @@
 package com.jeein.event.entity;
 
-import com.jeein.event.dto.request.ParsedEventRequest;
+import com.jeein.event.dto.request.EventRequest;
 import jakarta.persistence.*;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -58,7 +58,7 @@ public class Event extends DeletableEntity {
             orphanRemoval = true)
     private List<Area> areas;
 
-    public static Event toEntity(ParsedEventRequest request, String thumbnailPath) {
+    public static Event toEntity(EventRequest request, String thumbnailPath) {
         return Event.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())

@@ -1,4 +1,4 @@
-package com.jeein.event;
+package com.jeein.event.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.servers.Server;
@@ -13,6 +13,8 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         Server server = new Server();
         server.setUrl("https://api.socketing.jeein.xyz");
-        return new OpenAPI().servers(List.of(server));
+        Server localhostServer = new Server();
+        localhostServer.setUrl("http://localhost:8082");
+        return new OpenAPI().servers(List.of(server, localhostServer));
     }
 }
