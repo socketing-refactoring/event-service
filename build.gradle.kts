@@ -10,6 +10,7 @@ plugins {
     id("checkstyle")
     id("org.ec4j.editorconfig") version "0.1.0"
     id("org.asciidoctor.jvm.convert") version "4.0.4"
+    id("org.ajoberstar.git-publish") version "4.2.0"
 }
 
 group = "com.jeein"
@@ -70,6 +71,7 @@ repositories {
 
 val springCloudVersion = "2024.0.0"
 val snippetsDir = file("build/generated-snippets")
+val asciidoctorOutputDir = layout.buildDirectory.dir("docs/asciidoc/event-service")
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -155,7 +157,7 @@ val asciidoctorTask =
         )
 
         baseDirFollowsSourceFile() // required to include adoc into index.adoc
-        setOutputDir(layout.buildDirectory.dir("docs/asciidoc/member-service"))
+        setOutputDir(layout.buildDirectory.dir("docs/asciidoc/event-service"))
     }
 
 // Packaging Jar
@@ -170,4 +172,24 @@ tasks.named<BootJar>("bootJar") {
 
 tasks.named<Jar>("jar") {
     enabled = false
+}
+
+// Publishing Document
+tasks.named("gitPublishCopy") {
+    dependsOn("asciidoctor")
+}
+
+gitPublish {
+    repoUri.set("git@github.com:socketing-refactoring/socketing-refactoring.github.io.git")
+    branch.set("main")
+    contents {
+        from(asciidoctorOutputDir) {
+            into("docs/event-service")
+        }
+
+        preserve {
+            include("**")
+        }
+    }
+    commitMessage.set("Update Member Service API documentation")
 }
