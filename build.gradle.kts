@@ -11,6 +11,7 @@ plugins {
     id("org.ec4j.editorconfig") version "0.1.0"
     id("org.asciidoctor.jvm.convert") version "4.0.4"
     id("org.ajoberstar.git-publish") version "4.2.0"
+    id("com.epages.restdocs-api-spec") version "0.18.4"
 }
 
 group = "com.jeein"
@@ -94,7 +95,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testImplementation("net.bytebuddy:byte-buddy-agent:1.15.11")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-//    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.18.4")
+    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.18.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -125,7 +126,7 @@ tasks.named("spotlessApply") {
 }
 
 // Test Task Configuration (Spring Rest Docs)
-tasks.test {
+tasks.withType<Test> {
     useJUnitPlatform()
 
     // Remove JVM warning message
@@ -163,11 +164,16 @@ val asciidoctorTask =
 // Packaging Jar
 tasks.named<BootJar>("bootJar") {
     archiveFileName.set("event-service.jar")
-    dependsOn(asciidoctorTask)
 
     from(asciidoctorTask.map { it.outputDir }) {
-        into("static/docs")
+        into("static/docs/asciidoc")
     }
+
+    from(layout.buildDirectory.dir("api-spec")) {
+        into("static/docs/openapi")
+    }
+
+    dependsOn(asciidoctorTask, tasks.named("openapi3"))
 }
 
 tasks.named<Jar>("jar") {
@@ -191,5 +197,13 @@ gitPublish {
             include("**")
         }
     }
-    commitMessage.set("Update Member Service API documentation")
+    commitMessage.set("Update Event Service API documentation")
+}
+
+openapi3 {
+    this.setServer("https://api.socketing.jeein.xyz")
+    title = "My API"
+    description = "My API description"
+    version = "0.1.0"
+    format = "json" // or yml
 }

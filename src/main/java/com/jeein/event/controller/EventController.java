@@ -10,6 +10,8 @@ import com.jeein.event.dto.response.FlatSeatResponse;
 import com.jeein.event.dto.response.SeatReservationDeatilResponse;
 import com.jeein.event.dto.response.SeatReservationResponse;
 import com.jeein.event.dto.response.SeatResponse;
+import com.jeein.event.exception.ErrorCode;
+import com.jeein.event.exception.EventException;
 import com.jeein.event.service.EventService;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -99,6 +101,9 @@ public class EventController {
                     @RequestPart("request") @Valid EventRequest request,
                     @RequestPart("thumbnail") MultipartFile thumbnail) throws JsonProcessingException {
         log.debug(request.toString());
+        if (thumbnail.isEmpty()) {
+            throw new EventException(ErrorCode.EMPTY_THUMBNAIL);
+        }
 
         CommonResponse<EventResponse> response = eventService.saveEvent(request, thumbnail);
         return ResponseEntity.status(HttpStatus.CREATED)

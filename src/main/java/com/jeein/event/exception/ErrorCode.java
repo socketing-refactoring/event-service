@@ -20,7 +20,10 @@ public enum ErrorCode {
                                                                                                     "요청 헤더의 content type을 확인해 주세요."), INVALID_MULTIPARTFILE(
                                                                                                                     HttpStatus.BAD_REQUEST,
                                                                                                                     "C_007",
-                                                                                                                    "요청 데이터의 이미지가 유효하지 않습니다"),
+                                                                                                                    "요청 데이터의 이미지가 유효하지 않습니다"), EMPTY_THUMBNAIL(
+                                                                                                                                    HttpStatus.BAD_REQUEST,
+                                                                                                                                    "C_008",
+                                                                                                                                    "포스터 이미지는 필수입니다."),
 
     EVENT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "E_001", "공연 제목이 이미 존재합니다."), EVENT_NOT_FOUND(
                     HttpStatus.NOT_FOUND, "E_002", "공연을 찾을 수 없습니다."), EVENT_ALREADY_DELETED(
