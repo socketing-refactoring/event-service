@@ -19,24 +19,24 @@ import org.springframework.web.multipart.MultipartException;
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<CommonResponse<Object>> handleMethodArgumentNotValidException(
-            MethodArgumentNotValidException e) {
+                    MethodArgumentNotValidException e) {
         CommonResponse<Object> response =
-                CommonResponse.error(ErrorCode.INVALID_REQUEST_VALUE, e.getBindingResult());
+                        CommonResponse.error(ErrorCode.INVALID_REQUEST_VALUE, e.getBindingResult());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(CustomValidationException.class)
     protected ResponseEntity<CommonResponse<Object>> handleCustomValidationException(
-            CustomValidationException e) {
+                    CustomValidationException e) {
         CommonResponse<Object> response =
-                CommonResponse.error(ErrorCode.INVALID_REQUEST_VALUE, e.getBindingResult());
+                        CommonResponse.error(ErrorCode.INVALID_REQUEST_VALUE, e.getBindingResult());
         log.debug(e.getMessage(), e.getCause());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<CommonResponse<Object>> handleMethodArgumentTypeMismatchException(
-            MethodArgumentTypeMismatchException e) {
+                    MethodArgumentTypeMismatchException e) {
         CommonResponse<Object> response = CommonResponse.error(e);
         log.debug(e.getMessage(), e.getCause());
 
@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     protected ResponseEntity<CommonResponse<Object>> handleMethodArgumentTypeMismatchException(
-            HttpMediaTypeNotSupportedException e) {
+                    HttpMediaTypeNotSupportedException e) {
         log.debug(e.getMessage(), e.getCause());
 
         CommonResponse<Object> response = CommonResponse.error(ErrorCode.MULTIPART_NO_BOUNDARY);
@@ -53,22 +53,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MultipartException.class)
-    protected ResponseEntity<CommonResponse<Object>> handleMultipartException(
-            MultipartException e) {
+    protected ResponseEntity<CommonResponse<Object>> handleMultipartException(MultipartException e) {
         CommonResponse<Object> response = CommonResponse.error(ErrorCode.PAYLOAD_TOO_LARGE);
         return new ResponseEntity<>(response, ErrorCode.MULTIPART_NO_BOUNDARY.getStatus());
     }
 
     @ExceptionHandler(EventException.class)
-    protected ResponseEntity<CommonResponse<Object>> handleEventAlreadyExistsException(
-            EventException ee) {
+    protected ResponseEntity<CommonResponse<Object>> handleEventAlreadyExistsException(EventException ee) {
         CommonResponse<Object> response = CommonResponse.error(ee.getErrorCode());
         return new ResponseEntity<>(response, ee.getErrorCode().getStatus());
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
     protected ResponseEntity<CommonResponse<Object>> handleConstraintViolationException(
-            ConstraintViolationException e) {
+                    ConstraintViolationException e) {
         log.error(e.getMessage());
         CommonResponse<Object> response = CommonResponse.error(ErrorCode.INVALID_ENTITY_VALUE);
         return new ResponseEntity<>(response, ErrorCode.INVALID_ENTITY_VALUE.getStatus());
@@ -76,7 +74,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DatabaseConstraintException.class)
     protected ResponseEntity<CommonResponse<Object>> handleDatabaseConstraintException(
-            DatabaseConstraintException e) {
+                    DatabaseConstraintException e) {
         log.error(e.getMessage());
         CommonResponse<Object> response = CommonResponse.error(e.getErrorCode());
         return new ResponseEntity<>(response, e.getErrorCode().getStatus());
@@ -89,16 +87,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(JsonParseException.class)
-    protected ResponseEntity<CommonResponse<Object>> handleJsonParseException(
-            JsonParseException e) {
+    protected ResponseEntity<CommonResponse<Object>> handleJsonParseException(JsonParseException e) {
         log.error(e.getMessage());
         CommonResponse<Object> response = CommonResponse.error(ErrorCode.REQUEST_MAPPING_ERROR);
         return new ResponseEntity<>(response, ErrorCode.REQUEST_MAPPING_ERROR.getStatus());
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    protected ResponseEntity<CommonResponse<Object>> handleIllegalStateException(
-            IllegalStateException e) {
+    protected ResponseEntity<CommonResponse<Object>> handleIllegalStateException(IllegalStateException e) {
         log.error(e.getMessage());
         CommonResponse<Object> response = CommonResponse.error(ErrorCode.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(response, ErrorCode.INTERNAL_SERVER_ERROR.getStatus());

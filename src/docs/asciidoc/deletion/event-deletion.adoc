@@ -1,0 +1,15 @@
+=== HTTP 요청
+
+공연 삭제 요청에 대한 설명입니다.
+
+include::event-deletion-request.adoc[]
+
+=== HTTP 성공 응답
+
+공연 삭제 성공 시 반환되는 응답입니다.
+
+include::event-deletion-response.adoc[]
+
+=== HTTP 실패 응답
+
+공연 삭제 실패 시 발생할 수 있는 오류들을 분류하여 설명합니다.

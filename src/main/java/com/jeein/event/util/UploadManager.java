@@ -26,8 +26,7 @@ public class UploadManager {
     @Value("${upload.path}")
     private String uploadPath;
 
-    public String uploadFile(MultipartFile thumbnail, String title)
-            throws MultipartException, IOException {
+    public String uploadFile(MultipartFile thumbnail, String title) throws MultipartException, IOException {
         validateFile(thumbnail);
 
         String newFileName = generateNewFileName(thumbnail, title);
@@ -57,8 +56,7 @@ public class UploadManager {
 
         int lastIndexOfDot = originalFileName.lastIndexOf(".");
         String extension = originalFileName.substring(lastIndexOfDot);
-        String timestamp =
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        String timestamp = String.valueOf(System.currentTimeMillis());
         return String.format("%s_%s%s", title, timestamp, extension);
     }
 }

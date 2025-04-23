@@ -34,49 +34,31 @@ public class EventResponse {
         private Instant datetime;
 
         private static EventDatetimeResponse convertToEventDatetimeResponseFromEntity(
-                EventDatetime eventDatetime) {
-            return new EventDatetimeResponse(
-                    eventDatetime.getId().toString(), eventDatetime.getDatetime());
+                        EventDatetime eventDatetime) {
+            return new EventDatetimeResponse(eventDatetime.getId().toString(), eventDatetime.getDatetime());
         }
     }
 
     public static EventResponse convertToPlainEventFromEntity(Event event) {
-        return EventResponse.builder()
-                .id(event.getId().toString())
-                .title(event.getTitle())
-                .description(event.getDescription())
-                .thumbnail(event.getThumbnail())
-                .place(event.getPlace())
-                .artist(event.getArtist())
-                .eventDatetimes(
-                        event.getEventDatetimes().stream()
-                                .map(
-                                        EventDatetimeResponse
-                                                ::convertToEventDatetimeResponseFromEntity)
-                                .toList())
-                .eventOpenTime(event.getEventOpenTime())
-                .ticketingOpenTime(event.getTicketingOpenTime())
-                .build();
+        return EventResponse.builder().id(event.getId().toString()).title(event.getTitle())
+                        .description(event.getDescription()).thumbnail(event.getThumbnail())
+                        .place(event.getPlace()).artist(event.getArtist())
+                        .eventDatetimes(event.getEventDatetimes().stream()
+                                        .map(EventDatetimeResponse::convertToEventDatetimeResponseFromEntity)
+                                        .toList())
+                        .eventOpenTime(event.getEventOpenTime())
+                        .ticketingOpenTime(event.getTicketingOpenTime()).build();
     }
 
     public static EventResponse convertToDeatiledEvent(Event event) {
-        return EventResponse.builder()
-                .id(event.getId().toString())
-                .title(event.getTitle())
-                .description(event.getDescription())
-                .thumbnail(event.getThumbnail())
-                .place(event.getPlace())
-                .artist(event.getArtist())
-                .eventDatetimes(
-                        event.getEventDatetimes().stream()
-                                .map(
-                                        EventDatetimeResponse
-                                                ::convertToEventDatetimeResponseFromEntity)
-                                .toList())
-                .eventOpenTime(event.getEventOpenTime())
-                .ticketingOpenTime(event.getTicketingOpenTime())
-                .totalMap(event.getTotalMap())
-                .areas(event.getAreas().stream().map(AreaResponse::fromEntity).toList())
-                .build();
+        return EventResponse.builder().id(event.getId().toString()).title(event.getTitle())
+                        .description(event.getDescription()).thumbnail(event.getThumbnail())
+                        .place(event.getPlace()).artist(event.getArtist())
+                        .eventDatetimes(event.getEventDatetimes().stream()
+                                        .map(EventDatetimeResponse::convertToEventDatetimeResponseFromEntity)
+                                        .toList())
+                        .eventOpenTime(event.getEventOpenTime())
+                        .ticketingOpenTime(event.getTicketingOpenTime()).totalMap(event.getTotalMap())
+                        .areas(event.getAreas().stream().map(AreaResponse::fromEntity).toList()).build();
     }
 }

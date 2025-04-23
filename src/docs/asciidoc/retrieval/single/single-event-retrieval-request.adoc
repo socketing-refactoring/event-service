@@ -1,0 +1,11 @@
+HTTP Request
+include::{snippets}/event/retrieval/single/success/http-request.adoc[opts=optional]
+
+Request Headers
+include::{snippets}/event/retrieval/single/success/request-headers.adoc[opts=optional]
+
+Request Body
+include::{snippets}/event/retrieval/single/success/request-body.adoc[opts=optional]
+
+Request Fields
+include::{snippets}/event/retrieval/single/success/request-fields.adoc[opts=optional]

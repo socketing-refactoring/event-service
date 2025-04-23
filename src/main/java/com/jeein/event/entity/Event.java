@@ -44,31 +44,18 @@ public class Event extends DeletableEntity {
     @Column(nullable = false)
     private Instant ticketingOpenTime;
 
-    @OneToMany(
-            mappedBy = "event",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EventDatetime> eventDatetimes;
 
-    @OneToMany(
-            mappedBy = "event",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Area> areas;
 
     public static Event toEntity(EventRequest request, String thumbnailPath) {
-        return Event.builder()
-                .title(request.getTitle())
-                .description(request.getDescription())
-                .place(request.getPlace())
-                .artist(request.getArtist())
-                .thumbnail(thumbnailPath)
-                .eventOpenTime(request.getEventOpenTime())
-                .ticketingOpenTime(request.getTicketingOpenTime())
-                .totalMap(request.getTotalMap())
-                .build();
+        return Event.builder().title(request.getTitle()).description(request.getDescription())
+                        .place(request.getPlace()).artist(request.getArtist()).thumbnail(thumbnailPath)
+                        .eventOpenTime(request.getEventOpenTime())
+                        .ticketingOpenTime(request.getTicketingOpenTime()).totalMap(request.getTotalMap())
+                        .build();
     }
 
     public void addEventDatetimes(List<EventDatetime> eventDatetimes) {

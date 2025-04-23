@@ -31,4 +31,8 @@ public class SeatRequest {
     @Min(value = 1, message = "좌석 번호는 1 이상이어야 합니다.")
     @Max(value = Integer.MAX_VALUE, message = "시스템에서 처리할 수 없는 숫자입니다.")
     private int number;
+
+    public static SeatRequest of(int cx, int cy, int row, int number) {
+        return SeatRequest.builder().cx(cx).cy(cy).row(row).number(number).build();
+    }
 }

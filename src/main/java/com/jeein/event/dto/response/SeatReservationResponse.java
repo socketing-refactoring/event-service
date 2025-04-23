@@ -22,21 +22,15 @@ public class SeatReservationResponse {
 
     public static SeatReservationResponse of(Seat seat, ReservationResponse reservation) {
         if (reservation == null) {
-            return SeatReservationResponse.builder()
-                    .id(seat.getId().toString())
-                    .areaId(seat.getArea().getId().toString())
-                    .reservationId(null)
-                    .reserverName(null)
-                    .reserverEmail(null)
-                    .build();
+            return SeatReservationResponse.builder().id(seat.getId().toString())
+                            .areaId(seat.getArea().getId().toString()).reservationId(null).reserverName(null)
+                            .reserverEmail(null).build();
         } else {
-            return SeatReservationResponse.builder()
-                    .id(seat.getId().toString())
-                    .areaId(seat.getArea().getId().toString())
-                    .reservationId(reservation.getReserverId())
-                    .reserverName(reservation.getReserverName())
-                    .reserverEmail(reservation.getReserverEmail())
-                    .build();
+            return SeatReservationResponse.builder().id(seat.getId().toString())
+                            .areaId(seat.getArea().getId().toString())
+                            .reservationId(reservation.getReserverId())
+                            .reserverName(reservation.getReserverName())
+                            .reserverEmail(reservation.getReserverEmail()).build();
         }
     }
 }

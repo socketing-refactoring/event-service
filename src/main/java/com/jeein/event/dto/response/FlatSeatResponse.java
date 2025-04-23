@@ -22,15 +22,9 @@ public class FlatSeatResponse {
     private int number;
 
     public static FlatSeatResponse fromEntity(Seat seat) {
-        return FlatSeatResponse.builder()
-                .id(seat.getId().toString())
-                .areaId(seat.getArea().getId().toString())
-                .areaLabel(seat.getArea().getLabel())
-                .areaPrice(seat.getArea().getPrice())
-                .cx(seat.getCx())
-                .cy(seat.getCy())
-                .row(seat.getRow())
-                .number(seat.getNumber())
-                .build();
+        return FlatSeatResponse.builder().id(seat.getId().toString())
+                        .areaId(seat.getArea().getId().toString()).areaLabel(seat.getArea().getLabel())
+                        .areaPrice(seat.getArea().getPrice()).cx(seat.getCx()).cy(seat.getCy())
+                        .row(seat.getRow()).number(seat.getNumber()).build();
     }
 }

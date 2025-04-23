@@ -12,6 +12,6 @@ public interface OrderServiceFeignClient {
 
     @GetMapping("/api/v1/orders/reservers")
     ResponseEntity<CommonResponse<List<ReservationResponse>>> getReservationsByEventDatetimeId(
-            @RequestParam String eventDatetimeId,
-            @RequestParam(required = false, defaultValue = "false") boolean showCanceled);
+                    @RequestParam String eventDatetimeId,
+                    @RequestParam(required = false, defaultValue = "false") boolean showCanceled);
 }

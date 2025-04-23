@@ -25,7 +25,8 @@ spotless {
     java {
         removeUnusedImports()
         importOrder()
-        googleJavaFormat().aosp()
+//        googleJavaFormat().aosp()
+        eclipse().configFile("eclipse-java-google-style.xml")
     }
 
     kotlinGradle {
@@ -80,7 +81,7 @@ dependencies {
     implementation("org.springframework.cloud:spring-cloud-starter-netflix-eureka-client")
     implementation(platform("org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"))
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
+//    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5")
     implementation("org.postgresql:postgresql:42.6.2")
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("io.micrometer:micrometer-registry-prometheus:1.15.0-M2")
@@ -91,7 +92,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testImplementation("net.bytebuddy:byte-buddy-agent:1.15.11")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.18.4")
+//    testImplementation("com.epages:restdocs-api-spec-mockmvc:0.18.4")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     testCompileOnly("org.projectlombok:lombok")
     testAnnotationProcessor("org.projectlombok:lombok")
@@ -120,7 +121,6 @@ tasks.named("checkstyleTest") {
 tasks.named("spotlessApply") {
     dependsOn("editorconfigFormat")
 }
-
 
 // Test Task Configuration (Spring Rest Docs)
 tasks.test {

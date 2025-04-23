@@ -12,13 +12,8 @@ public class AreaReservationStatistics {
     private int price;
     private int reservedCount;
 
-    public static AreaReservationStatistics of(
-            String id, String label, int price, int reservedCount) {
-        return AreaReservationStatistics.builder()
-                .id(id)
-                .label(label)
-                .price(price)
-                .reservedCount(reservedCount)
-                .build();
+    public static AreaReservationStatistics of(String id, String label, int price, int reservedCount) {
+        return AreaReservationStatistics.builder().id(id).label(label).price(price)
+                        .reservedCount(reservedCount).build();
     }
 }

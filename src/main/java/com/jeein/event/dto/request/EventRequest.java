@@ -1,11 +1,10 @@
 package com.jeein.event.dto.request;
 
-import java.time.Instant;
-import java.util.List;
-
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import java.time.Instant;
+import java.util.List;
 import lombok.*;
 
 @Getter
@@ -46,18 +45,10 @@ public class EventRequest {
     private List<Instant> eventDatetimes;
 
     public static EventRequest of(String title, String description, String place, String artist,
-                                  Instant eventOpenTime, Instant ticketingOpenTime,
-                                  String totalMap, List<AreaRequest> areas, List<Instant> eventDatetimes) {
-        return EventRequest.builder()
-            .title(title)
-            .description(description)
-            .place(place)
-            .artist(artist)
-            .eventOpenTime(eventOpenTime)
-            .ticketingOpenTime(ticketingOpenTime)
-            .totalMap(totalMap)
-            .areas(areas)
-            .eventDatetimes(eventDatetimes)
-            .build();
+                    Instant eventOpenTime, Instant ticketingOpenTime, String totalMap,
+                    List<AreaRequest> areas, List<Instant> eventDatetimes) {
+        return EventRequest.builder().title(title).description(description).place(place).artist(artist)
+                        .eventOpenTime(eventOpenTime).ticketingOpenTime(ticketingOpenTime).totalMap(totalMap)
+                        .areas(areas).eventDatetimes(eventDatetimes).build();
     }
 }

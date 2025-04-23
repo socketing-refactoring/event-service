@@ -1,0 +1,11 @@
+HTTP Response
+include::{snippets}/event/retrieval/list/success/http-response.adoc[opts=optional]
+
+Response Headers
+include::{snippets}/event/retrieval/list/success/response-headers.adoc[opts=optional]
+
+Response Body
+include::{snippets}/event/retrieval/list/success/response-body.adoc[opts=optional]
+
+Response Fields
+include::{snippets}/event/retrieval/list/success/response-fields.adoc[opts=optional]

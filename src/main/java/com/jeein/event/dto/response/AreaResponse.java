@@ -19,13 +19,8 @@ public class AreaResponse {
     private List<SeatResponse> seats;
 
     public static AreaResponse fromEntity(Area area) {
-        return AreaResponse.builder()
-                .id(area.getId().toString())
-                .eventId(area.getEvent().getId().toString())
-                .label(area.getLabel())
-                .price(area.getPrice())
-                .areaMap(area.getAreaMap())
-                .seats(area.getSeats().stream().map(SeatResponse::fromEntity).toList())
-                .build();
+        return AreaResponse.builder().id(area.getId().toString()).eventId(area.getEvent().getId().toString())
+                        .label(area.getLabel()).price(area.getPrice()).areaMap(area.getAreaMap())
+                        .seats(area.getSeats().stream().map(SeatResponse::fromEntity).toList()).build();
     }
 }

@@ -26,24 +26,19 @@ public class Area extends BaseEntity {
     @Column(nullable = false)
     private int price;
 
-    @Lob @Column private String areaMap;
+    @Lob
+    @Column
+    private String areaMap;
 
-    @ManyToOne private Event event;
+    @ManyToOne
+    private Event event;
 
-    @OneToMany(
-            mappedBy = "area",
-            fetch = FetchType.LAZY,
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+    @OneToMany(mappedBy = "area", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Seat> seats;
 
     public static Area toEntity(AreaRequest area, Event event) {
-        return Area.builder()
-                .label(area.getLabel())
-                .price(area.getPrice())
-                .areaMap(area.getAreaMap())
-                .event(event)
-                .build();
+        return Area.builder().label(area.getLabel()).price(area.getPrice()).areaMap(area.getAreaMap())
+                        .event(event).build();
     }
 
     public void addSeats(List<Seat> seats) {

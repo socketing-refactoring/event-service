@@ -37,15 +37,11 @@ public class Seat extends BaseEntity {
     @Column(nullable = false)
     private int number;
 
-    @ManyToOne private Area area;
+    @ManyToOne
+    private Area area;
 
     public static Seat toEntity(SeatRequest seat, Area area) {
-        return Seat.builder()
-                .cx(seat.getCx())
-                .cy(seat.getCy())
-                .row(seat.getRow())
-                .number(seat.getNumber())
-                .area(area)
-                .build();
+        return Seat.builder().cx(seat.getCx()).cy(seat.getCy()).row(seat.getRow()).number(seat.getNumber())
+                        .area(area).build();
     }
 }

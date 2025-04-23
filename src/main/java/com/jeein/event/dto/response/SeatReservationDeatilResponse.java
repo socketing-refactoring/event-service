@@ -19,38 +19,22 @@ public class SeatReservationDeatilResponse extends FlatSeatResponse {
     private String reserverName;
     private String reserverEmail;
 
-    public static SeatReservationDeatilResponse of(
-            Seat seat, ReservationResponse reservationResponse) {
+    public static SeatReservationDeatilResponse of(Seat seat, ReservationResponse reservationResponse) {
         if (reservationResponse == null) {
-            return SeatReservationDeatilResponse.builder()
-                    .id(seat.getId().toString())
-                    .areaId(seat.getArea().getId().toString())
-                    .areaLabel(seat.getArea().getLabel())
-                    .areaPrice(seat.getArea().getPrice())
-                    .cx(seat.getCx())
-                    .cy(seat.getCy())
-                    .row(seat.getRow())
-                    .number(seat.getNumber())
-                    .reservationId(null)
-                    .reserverId(null)
-                    .reserverName(null)
-                    .reserverEmail(null)
-                    .build();
+            return SeatReservationDeatilResponse.builder().id(seat.getId().toString())
+                            .areaId(seat.getArea().getId().toString()).areaLabel(seat.getArea().getLabel())
+                            .areaPrice(seat.getArea().getPrice()).cx(seat.getCx()).cy(seat.getCy())
+                            .row(seat.getRow()).number(seat.getNumber()).reservationId(null).reserverId(null)
+                            .reserverName(null).reserverEmail(null).build();
         } else {
-            return SeatReservationDeatilResponse.builder()
-                    .id(seat.getId().toString())
-                    .areaId(seat.getArea().getId().toString())
-                    .areaLabel(seat.getArea().getLabel())
-                    .areaPrice(seat.getArea().getPrice())
-                    .cx(seat.getCx())
-                    .cy(seat.getCy())
-                    .row(seat.getRow())
-                    .number(seat.getNumber())
-                    .reservationId(reservationResponse.getId())
-                    .reserverId(reservationResponse.getReserverId())
-                    .reserverName(reservationResponse.getReserverName())
-                    .reserverEmail(reservationResponse.getReserverEmail())
-                    .build();
+            return SeatReservationDeatilResponse.builder().id(seat.getId().toString())
+                            .areaId(seat.getArea().getId().toString()).areaLabel(seat.getArea().getLabel())
+                            .areaPrice(seat.getArea().getPrice()).cx(seat.getCx()).cy(seat.getCy())
+                            .row(seat.getRow()).number(seat.getNumber())
+                            .reservationId(reservationResponse.getId())
+                            .reserverId(reservationResponse.getReserverId())
+                            .reserverName(reservationResponse.getReserverName())
+                            .reserverEmail(reservationResponse.getReserverEmail()).build();
         }
     }
 }

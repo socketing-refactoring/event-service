@@ -1,0 +1,35 @@
+=== HTTP 요청
+
+공연 등록 요청에 대한 설명입니다.
+
+include::event-creation-request.adoc[]
+
+=== HTTP 성공 응답
+
+공연 등록 성공 시 반환되는 응답입니다.
+
+include::event-creation-response.adoc[]
+
+=== HTTP 실패 응답
+
+공연 등록 실패 시 발생할 수 있는 오류들을 분류하여 설명합니다.
+
+==== 유효성 오류
+
+공연 등록 요청 데이터의 유효성 검사 실패 응답입니다.
+
+include::event-creation-validation.adoc[]
+
+==== 중복 오류
+
+공연 등록 요청 데이터의 중복 예외로 인한 실패 응답입니다.
+
+include::event-creation-duplication.adoc[]
+
+==== 파일 업로드 오류
+
+공연 포스터 이미지 업로드 과정에서 예외가 발생했을 때 실패 응답입니다.
+
+==== 기타 요청 오류
+
+공연 등록 요청 과정에서 발생할 수 있는 기타 오류입니다.

@@ -1,0 +1,14 @@
+HTTP Request
+include::{snippets}/event/creation/success/http-request.adoc[opts=optional]
+
+Request Headers
+include::{snippets}/event/creation/success/request-headers.adoc[opts=optional]
+
+Request Body
+include::{snippets}/event/creation/success/request-body.adoc[opts=optional]
+
+Request Parts
+include::{snippets}/event/creation/success/request-parts.adoc[opts=optional]
+
+Request Fields
+include::{snippets}/event/creation/success/request-part-request-fields.adoc[opts=optional]

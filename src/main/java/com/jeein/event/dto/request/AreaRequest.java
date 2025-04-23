@@ -26,4 +26,8 @@ public class AreaRequest {
 
     @NotNull(message = "좌석 정보를 등록해 주세요.")
     private List<SeatRequest> seats;
+
+    public static AreaRequest of(String label, int price, String areaMap, List<SeatRequest> seats) {
+        return AreaRequest.builder().label(label).price(price).areaMap(areaMap).seats(seats).build();
+    }
 }

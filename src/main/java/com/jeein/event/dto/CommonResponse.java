@@ -51,10 +51,8 @@ public class CommonResponse<T> {
     public static CommonResponse<Object> error(MethodArgumentTypeMismatchException e) {
         String value = Optional.ofNullable(e.getValue()).map(Object::toString).orElse("");
         List<FieldError> errors = FieldError.of(e.getName(), value, e.getErrorCode());
-        return new CommonResponse<>(
-                ErrorCode.INVALID_TYPE_VALUE.getMessage(),
-                ErrorCode.INVALID_TYPE_VALUE.getCode(),
-                errors);
+        return new CommonResponse<>(ErrorCode.INVALID_TYPE_VALUE.getMessage(),
+                        ErrorCode.INVALID_TYPE_VALUE.getCode(), errors);
     }
 
     @Getter
@@ -77,16 +75,11 @@ public class CommonResponse<T> {
         }
 
         private static List<FieldError> of(BindingResult bindingResult) {
-            List<org.springframework.validation.FieldError> fieldErrors =
-                    bindingResult.getFieldErrors();
+            List<org.springframework.validation.FieldError> fieldErrors = bindingResult.getFieldErrors();
             return fieldErrors.stream()
-                    .map(
-                            error ->
-                                    new FieldError(
-                                            error.getField(),
-                                            error.getRejectedValue().toString(),
-                                            error.getDefaultMessage()))
-                    .collect(Collectors.toList());
+                            .map(error -> new FieldError(error.getField(),
+                                            error.getRejectedValue().toString(), error.getDefaultMessage()))
+                            .collect(Collectors.toList());
         }
     }
 }

@@ -22,9 +22,8 @@ public class LoggingFilter extends OncePerRequestFilter {
     private static final String ACTUATOR_PATH = "/actuator";
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+                    FilterChain filterChain) throws ServletException, IOException {
 
         if (isSwaggerRequest(request) || isActuatorRequest(request) || isImageRequest(request)) {
             filterChain.doFilter(request, response);
@@ -38,28 +37,20 @@ public class LoggingFilter extends OncePerRequestFilter {
 
         byte[] requestBody = requestWrapper.getContentAsByteArray();
         if (requestBody.length <= MAX_LOG_SIZE) {
-            log.info(
-                    "request : {uri: {}, method: {}, body: {}}",
-                    request.getRequestURI(),
-                    request.getMethod(),
-                    new String(requestBody, StandardCharsets.UTF_8));
+            log.info("request : {uri: {}, method: {}, body: {}}", request.getRequestURI(),
+                            request.getMethod(), new String(requestBody, StandardCharsets.UTF_8));
         } else {
-            log.info(
-                    "request : {uri: {}, method: {}, body: request body is too large to log}",
-                    request.getRequestURI(),
-                    request.getMethod());
+            log.info("request : {uri: {}, method: {}, body: request body is too large to log}",
+                            request.getRequestURI(), request.getMethod());
         }
 
         byte[] responseBody = responseWrapper.getContentAsByteArray();
         if (responseBody.length <= MAX_LOG_SIZE) {
-            log.info(
-                    "response : {status: {}, body: {}}",
-                    response.getStatus(),
-                    new String(responseBody, StandardCharsets.UTF_8));
+            log.info("response : {status: {}, body: {}}", response.getStatus(),
+                            new String(responseBody, StandardCharsets.UTF_8));
         } else {
-            log.info(
-                    "response : {status: {}, body: response body is too large to log}",
-                    response.getStatus());
+            log.info("response : {status: {}, body: response body is too large to log}",
+                            response.getStatus());
         }
 
         responseWrapper.copyBodyToResponse();
