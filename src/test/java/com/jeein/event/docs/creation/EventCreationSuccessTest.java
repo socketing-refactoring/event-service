@@ -17,21 +17,12 @@ import com.jeein.event.dto.request.AreaRequest;
 import com.jeein.event.dto.request.EventRequest;
 import com.jeein.event.dto.request.SeatRequest;
 import com.jeein.event.service.EventService;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Instant;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +34,6 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.event.annotation.AfterTestClass;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -80,25 +70,25 @@ public class EventCreationSuccessTest {
                         .build();
     }
 
-//    @AfterEach
-//    void cleanUpUploadedFiles() throws IOException {
-//        Path uploadDirectory = Paths.get(uploadPath);
-//
-//        if (Files.exists(uploadDirectory)) {
-//            try (Stream<Path> paths = Files.walk(uploadDirectory)) {
-//                paths.sorted(Comparator.reverseOrder())
-//                    .forEach(path -> {
-//                        try {
-//                            Files.delete(path);
-//                        } catch (IOException e) {
-//                            System.err.println("파일 삭제 실패: " + path);
-//                        }
-//                    });
-//            }
-//        } else {
-//            System.out.println("삭제할 디렉토리가 존재하지 않음: " + uploadDirectory);
-//        }
-//    }
+    // @AfterEach
+    // void cleanUpUploadedFiles() throws IOException {
+    // Path uploadDirectory = Paths.get(uploadPath);
+    //
+    // if (Files.exists(uploadDirectory)) {
+    // try (Stream<Path> paths = Files.walk(uploadDirectory)) {
+    // paths.sorted(Comparator.reverseOrder())
+    // .forEach(path -> {
+    // try {
+    // Files.delete(path);
+    // } catch (IOException e) {
+    // System.err.println("파일 삭제 실패: " + path);
+    // }
+    // });
+    // }
+    // } else {
+    // System.out.println("삭제할 디렉토리가 존재하지 않음: " + uploadDirectory);
+    // }
+    // }
 
     @Test
     @DisplayName("공연 요청이 유효하면 공연가 성공적으로 생성된다.")

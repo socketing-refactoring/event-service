@@ -10,7 +10,8 @@ public class CustomOperationRequestPart implements OperationRequestPart {
     private final byte[] content;
     private final HttpHeaders headers;
 
-    public CustomOperationRequestPart(String name, String submittedFileName, byte[] content, HttpHeaders headers) {
+    public CustomOperationRequestPart(String name, String submittedFileName, byte[] content,
+                    HttpHeaders headers) {
         this.name = name;
         this.submittedFileName = submittedFileName;
         this.content = content;
@@ -39,6 +40,7 @@ public class CustomOperationRequestPart implements OperationRequestPart {
         }
         return null;
     }
+
     @Override
     public HttpHeaders getHeaders() {
         return headers;
