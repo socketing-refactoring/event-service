@@ -23,6 +23,9 @@ public interface EventRepository extends JpaRepository<Event, UUID> {
     @Query("SELECT e FROM Event e WHERE e.id = :eventId AND e.deletedAt IS NULL")
     Optional<Event> findById(@Param("eventId") UUID eventId);
 
+    @Query("SELECT e FROM Event e WHERE e.id = :eventId")
+    Optional<Event> findByIdIncludingDeleted(@Param("eventId") UUID eventId);
+
     @Query("SELECT e FROM Event e WHERE e.title = :title AND e.deletedAt IS NULL")
     Optional<Event> findByTitle(String title);
 

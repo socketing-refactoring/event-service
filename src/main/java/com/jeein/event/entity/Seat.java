@@ -38,6 +38,7 @@ public class Seat extends BaseEntity {
     private int number;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Area area;
 
     public static Seat toEntity(SeatRequest seat, Area area) {

@@ -17,13 +17,19 @@ import com.jeein.event.docs.snippets.EventSnippet;
 import com.jeein.event.dto.request.AreaRequest;
 import com.jeein.event.dto.request.EventRequest;
 import com.jeein.event.dto.request.SeatRequest;
+import com.jeein.event.feign.JoinRequestDTO;
+import com.jeein.event.feign.MemberServiceFeignClient;
 import com.jeein.event.service.EventService;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +47,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ActiveProfiles("test")
 @SpringBootTest
+@TestInstance(Lifecycle.PER_CLASS)
 @Transactional
 @ExtendWith(RestDocumentationExtension.class)
 @DisplayName("공연 소프트 삭제 테스트")
@@ -55,10 +62,17 @@ public class EventSoftDeletionSuccessTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private MemberServiceFeignClient memberServiceFeignClient;
+
     private MockMvc mockMvc;
 
     @Value("${upload.path}")
     private String uploadPath;
+
+    private String eventId;
+
+    private String managerId;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext,
@@ -68,6 +82,44 @@ public class EventSoftDeletionSuccessTest {
                         .defaultRequest(post("/").accept(MediaType.APPLICATION_JSON_VALUE)
                                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                         .build();
+    }
+
+    @BeforeAll
+    void setUpManagerAndEvent() throws Exception {
+        // set manager
+        managerId = memberServiceFeignClient.joinManager(
+                        JoinRequestDTO.of("testmanager@example.com", "매니저 이름", "매니저 닉네임", "12345678"))
+                        .getBody().getData().getId();
+
+        // set event
+        List<AreaRequest> mockAreas = IntStream.range(0, 2).mapToObj(i -> AreaRequest.of(
+                        String.valueOf((char) ('A' + i)), 50000, "<svg>...</svg>",
+                        IntStream.range(0, 2).mapToObj(
+                                        j -> SeatRequest.of(100 * i + j, 200 * i + j, j / 10 + 1, j % 10 + 1))
+                                        .toList()))
+                        .toList();
+        EventRequest request = EventRequest.of("공연 제목", "공연 설명", "공연 장소", "공연 아티스트",
+                        Instant.parse("2025-04-25T05:00:00.000Z"), Instant.parse("2025-04-30T05:00:00.000Z"),
+                        "<svg>...</svg>", mockAreas, List.of(Instant.parse("2025-05-01T05:00:00.000Z"),
+                                        Instant.parse("2025-05-02T05:00:00.000Z")));
+
+        MockMultipartFile requestPart = new MockMultipartFile("request", "", MediaType.APPLICATION_JSON_VALUE,
+                        objectMapper.writeValueAsBytes(request));
+        ClassPathResource file = new ClassPathResource("sample-thumbnail.jpg");
+        MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", file.getFilename(),
+                        MediaType.IMAGE_JPEG_VALUE, file.getInputStream());
+
+        String responseJson = mockMvc
+                        .perform(multipart(ApiPath.EVENT).file(requestPart).file(thumbnail)
+                                        .header("x-api-managerId", managerId))
+                        .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
+
+        eventId = objectMapper.readTree(responseJson).path("data").path("id").asText();
+    }
+
+    @AfterEach
+    void cleanUpManager() {
+        memberServiceFeignClient.hardDeleteManager(managerId);
     }
 
     // @AfterEach
@@ -93,32 +145,6 @@ public class EventSoftDeletionSuccessTest {
     @Test
     @DisplayName("공연를 소프트 삭제한다.")
     void retrieveEventList_success() throws Exception {
-
-        // given
-        List<AreaRequest> mockAreas = IntStream.range(0, 2).mapToObj(i -> AreaRequest.of(
-                        String.valueOf((char) ('A' + i)), 50000, "<svg>...</svg>",
-                        IntStream.range(0, 2).mapToObj(
-                                        j -> SeatRequest.of(100 * i + j, 200 * i + j, j / 10 + 1, j % 10 + 1))
-                                        .toList()))
-                        .toList();
-        EventRequest request = EventRequest.of("공연 제목", "공연 설명", "공연 장소", "공연 아티스트",
-                        Instant.parse("2025-04-25T05:00:00.000Z"), Instant.parse("2025-04-30T05:00:00.000Z"),
-                        "<svg>...</svg>", mockAreas, List.of(Instant.parse("2025-05-01T05:00:00.000Z"),
-                                        Instant.parse("2025-05-02T05:00:00.000Z")));
-
-        MockMultipartFile requestPart = new MockMultipartFile("request", "", MediaType.APPLICATION_JSON_VALUE,
-                        objectMapper.writeValueAsBytes(request));
-        ClassPathResource file = new ClassPathResource("sample-thumbnail.jpg");
-        MockMultipartFile thumbnail = new MockMultipartFile("thumbnail", file.getFilename(),
-                        MediaType.IMAGE_JPEG_VALUE, file.getInputStream());
-
-        // when
-        String responseJson = mockMvc.perform(multipart(ApiPath.EVENT).file(requestPart).file(thumbnail))
-                        .andExpect(status().isCreated()).andReturn().getResponse().getContentAsString();
-
-        String eventId = objectMapper.readTree(responseJson).path("data").path("id").asText();
-
-        // then
         mockMvc.perform(delete(ApiPath.EVENT + "/{eventId}", eventId)).andExpect(status().isNoContent())
                         .andExpect(jsonPath("$.code").value("0"))
                         .andExpect(jsonPath("$.message").value(ResponseMessage.EVENT_DELETION_SUCCESS))

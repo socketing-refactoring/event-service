@@ -16,13 +16,19 @@ import com.jeein.event.docs.snippets.EventSnippet;
 import com.jeein.event.dto.request.AreaRequest;
 import com.jeein.event.dto.request.EventRequest;
 import com.jeein.event.dto.request.SeatRequest;
+import com.jeein.event.feign.JoinRequestDTO;
+import com.jeein.event.feign.MemberServiceFeignClient;
 import com.jeein.event.service.EventService;
 import java.time.Instant;
 import java.util.List;
 import java.util.stream.IntStream;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -41,6 +47,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @ActiveProfiles("test")
 @SpringBootTest
+@TestInstance(Lifecycle.PER_CLASS)
 @Transactional
 @ExtendWith(RestDocumentationExtension.class)
 @DisplayName("공연 생성 성공 테스트")
@@ -55,10 +62,15 @@ public class EventCreationSuccessTest {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private MemberServiceFeignClient memberServiceFeignClient;
+
     private MockMvc mockMvc;
 
     @Value("${upload.path}")
     private String uploadPath;
+
+    private String managerId;
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext,
@@ -69,6 +81,20 @@ public class EventCreationSuccessTest {
                                         .contentType(MediaType.MULTIPART_FORM_DATA))
                         .build();
     }
+
+    @BeforeAll
+    void setManager() {
+        // manager setup
+        managerId = memberServiceFeignClient.joinManager(
+                        JoinRequestDTO.of("testmanager@example.com", "매니저 이름", "매니저 닉네임", "12345678"))
+                        .getBody().getData().getId();
+    }
+
+    @AfterEach
+    void cleanUpManager() {
+        memberServiceFeignClient.hardDeleteManager(managerId);
+    }
+
 
     // @AfterEach
     // void cleanUpUploadedFiles() throws IOException {
@@ -113,8 +139,8 @@ public class EventCreationSuccessTest {
                         MediaType.IMAGE_JPEG_VALUE, file.getInputStream());
 
         // when & then
-        mockMvc.perform(multipart(ApiPath.EVENT).file(requestPart).file(thumbnail))
-                        .andExpect(status().isCreated()).andExpect(jsonPath("$.code").value("0"))
+        mockMvc.perform(multipart(ApiPath.EVENT).file(requestPart).file(thumbnail).header("x-api-managerId",
+                        managerId)).andExpect(status().isCreated()).andExpect(jsonPath("$.code").value("0"))
                         .andExpect(jsonPath("$.message").value(ResponseMessage.EVENT_CREATION_SUCCESS))
                         .andExpect(jsonPath("$.errors").doesNotExist())
                         .andExpect(jsonPath("$.data.id").exists())

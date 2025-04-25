@@ -245,7 +245,8 @@ public class EventService {
     }
 
     @Transactional
-    public CommonResponse<EventResponse> saveEvent(EventRequest eventRequest, MultipartFile thumbnail) {
+    public CommonResponse<EventResponse> saveEvent(EventRequest eventRequest, MultipartFile thumbnail,
+                    String managerId) {
         Optional<Event> existingEvent = eventRepository.findByTitle(eventRequest.getTitle());
         if (existingEvent.isPresent()) {
             throw new EventException(ErrorCode.EVENT_ALREADY_EXISTS);
@@ -263,7 +264,7 @@ public class EventService {
         }
 
         // 공연 저장
-        Event event = Event.toEntity(eventRequest, newFileName);
+        Event event = Event.toEntity(eventRequest, newFileName, managerId);
         event.addEventDatetimes(eventRequest.getEventDatetimes().stream()
                         .map(datetime -> EventDatetime.toEntity(datetime, event)).toList());
 
@@ -294,5 +295,18 @@ public class EventService {
 
         eventRepository.softDeleteEvent(UUID.fromString(eventId), Instant.now());
         return CommonResponse.success(ResponseMessage.EVENT_DELETION_SUCCESS, "0", null);
+    }
+
+    @Transactional
+    public CommonResponse<Object> hardDeleteEvent(String eventId) {
+        Event event = eventRepository.findByIdIncludingDeleted(UUID.fromString(eventId))
+                        .orElseThrow(() -> new EventException(ErrorCode.EVENT_NOT_FOUND));
+
+        if (event.getDeletedAt() != null) {
+            throw new EventException(ErrorCode.EVENT_ALREADY_DELETED);
+        }
+
+        eventRepository.delete(event);
+        return CommonResponse.success("단일 공연 하드 삭제가 성공적으로 이루어졌습니다.", "0", null);
     }
 }

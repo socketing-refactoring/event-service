@@ -26,11 +26,11 @@ public class Area extends BaseEntity {
     @Column(nullable = false)
     private int price;
 
-    @Lob
-    @Column
+    @Column(columnDefinition = "text")
     private String areaMap;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Event event;
 
     @OneToMany(mappedBy = "area", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)

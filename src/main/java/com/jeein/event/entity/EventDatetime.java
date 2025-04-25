@@ -18,6 +18,7 @@ public class EventDatetime extends BaseEntity {
     private Instant datetime;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Event event;
 
     public static EventDatetime toEntity(Instant datetime, Event event) {

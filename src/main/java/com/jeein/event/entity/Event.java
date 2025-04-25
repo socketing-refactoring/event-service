@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import java.time.Instant;
 import java.util.List;
+import java.util.UUID;
 import lombok.*;
 
 @Entity
@@ -16,7 +17,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @ToString(callSuper = true)
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "title", "deleted_at"}))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"id", "title", "deleted_at"}))
 public class Event extends DeletableEntity {
 
     @Column(nullable = false, length = 20)
@@ -28,8 +29,7 @@ public class Event extends DeletableEntity {
     @Column(nullable = false)
     private String thumbnail;
 
-    @Column(nullable = false)
-    @Lob
+    @Column(nullable = false, columnDefinition = "text")
     private String totalMap;
 
     @Column(nullable = false, length = 20)
@@ -50,12 +50,15 @@ public class Event extends DeletableEntity {
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Area> areas;
 
-    public static Event toEntity(EventRequest request, String thumbnailPath) {
+    @Column(nullable = false)
+    private UUID managerId;
+
+    public static Event toEntity(EventRequest request, String thumbnailPath, String managerId) {
         return Event.builder().title(request.getTitle()).description(request.getDescription())
                         .place(request.getPlace()).artist(request.getArtist()).thumbnail(thumbnailPath)
                         .eventOpenTime(request.getEventOpenTime())
                         .ticketingOpenTime(request.getTicketingOpenTime()).totalMap(request.getTotalMap())
-                        .build();
+                        .managerId(UUID.fromString(managerId)).build();
     }
 
     public void addEventDatetimes(List<EventDatetime> eventDatetimes) {

@@ -27,7 +27,8 @@ spring:
         highlight_sql: true
 eureka:
   client:
-    enabled: false
+    service-url:
+      defaultZone: "http://15.165.18.23:8761/eureka/"
 logging:
   config: "classpath:logback-spring.xml"
 management:

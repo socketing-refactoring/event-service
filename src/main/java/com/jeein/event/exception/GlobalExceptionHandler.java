@@ -28,9 +28,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomValidationException.class)
     protected ResponseEntity<CommonResponse<Object>> handleCustomValidationException(
                     CustomValidationException e) {
-        CommonResponse<Object> response =
-                        CommonResponse.error(ErrorCode.INVALID_REQUEST_VALUE, e.getBindingResult());
-        log.debug(e.getMessage(), e.getCause());
+        CommonResponse<Object> response = CommonResponse.error(ErrorCode.INVALID_REQUEST_VALUE);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

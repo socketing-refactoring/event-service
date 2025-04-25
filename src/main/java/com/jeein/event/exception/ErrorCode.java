@@ -25,9 +25,16 @@ public enum ErrorCode {
                                                                                                                                     "C_008",
                                                                                                                                     "포스터 이미지는 필수입니다."),
 
+    INVALID_TOKEN(HttpStatus.FORBIDDEN, "A_002", "접근이 허용되지 않은 사용자입니다"),
+
     EVENT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "E_001", "공연 제목이 이미 존재합니다."), EVENT_NOT_FOUND(
-                    HttpStatus.NOT_FOUND, "E_002", "공연을 찾을 수 없습니다."), EVENT_ALREADY_DELETED(
-                                    HttpStatus.BAD_REQUEST, "E_003", "이미 삭제된 공연입니다."),
+                    HttpStatus.NOT_FOUND, "E_002",
+                    "공연을 찾을 수 없습니다."), EVENT_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "E_003",
+                                    "이미 삭제된 공연입니다."), SEAT_NOT_FOUND(HttpStatus.NOT_FOUND, "E_003",
+                                                    "좌석을 찾을 수 없습니다."), EVENT_SEAT_MISMATCH(
+                                                                    HttpStatus.CONFLICT, "E_004",
+                                                                    "공연 정보와 좌석 정보가 일치하지 않습니다."),
+
 
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_001", "서버에 오류가 발생했습니다."), UPLOAD_ERROR(
                     HttpStatus.INTERNAL_SERVER_ERROR, "S_002",
@@ -47,16 +54,4 @@ public enum ErrorCode {
         this.message = message;
         this.code = code;
     }
-
-    // public int getStatus() {
-    // return status;
-    // }
-    // public String getMessage() {
-    // return this.message;
-    // }
-    //
-    // public String getCode() {
-    // return code;
-    // }
-
 }
