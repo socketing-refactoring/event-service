@@ -47,13 +47,19 @@ public class EventServiceVer2 {
         Event event = eventRepository.findById(UUID.fromString(eventId))
                         .orElseThrow(() -> new EventException(ErrorCode.EVENT_NOT_FOUND));
 
-        List<Seat> seats = seatRepository.findByIds(seatIds.stream().map(UUID::fromString).toList());
-        if (seats.isEmpty()) {
-            throw new EventException(ErrorCode.SEAT_NOT_FOUND);
-        }
+        List<Seat> seats;
+        if (!seatIds.isEmpty()) {
+            seats = seatRepository.findByIds(seatIds.stream().map(UUID::fromString).toList());
+            if (seats.isEmpty()) {
+                throw new EventException(ErrorCode.SEAT_NOT_FOUND);
+            }
 
-        if (!event.getId().equals(seats.getFirst().getArea().getEvent().getId())) {
-            throw new EventException(ErrorCode.EVENT_SEAT_MISMATCH);
+            if (!event.getId().equals(seats.getFirst().getArea().getEvent().getId())) {
+                throw new EventException(ErrorCode.EVENT_SEAT_MISMATCH);
+            }
+
+        } else {
+            seats = seatRepository.findByEventId(UUID.fromString(eventId));
         }
 
         List<SeatAreaResponse> seatResponses =

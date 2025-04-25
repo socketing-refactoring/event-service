@@ -1,6 +1,7 @@
 package com.jeein.event.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.jeein.event.entity.Area;
 import com.jeein.event.entity.Seat;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -20,26 +21,26 @@ public class SeatAreaResponse {
     private int row;
     private int number;
 
-    private Area area;
+    private AreaResponse area;
 
+    @Getter
     @AllArgsConstructor
-    private static class Area {
+    public static class AreaResponse {
         private String id;
         private String label;
         private int price;
         private String eventId;
+
+        public static AreaResponse of(Area area) {
+            return new AreaResponse(area.getId().toString(), area.getLabel(), area.getPrice(),
+                            area.getEvent().getId().toString());
+        }
     }
 
     public static SeatAreaResponse of(Seat seat, boolean includeArea) {
-        SeatAreaResponseBuilder seatAreaResponseBuilder =
-                        SeatAreaResponse.builder().id(seat.getId().toString()).cx(seat.getCx())
-                                        .cy(seat.getCy()).row(seat.getRow()).number(seat.getRow());
-
-        if (includeArea) {
-            return seatAreaResponseBuilder.area(new Area(seat.getArea().getId().toString(),
-                            seat.getArea().getLabel(), seat.getArea().getPrice(),
-                            seat.getArea().getEvent().getId().toString())).build();
-        }
-        return seatAreaResponseBuilder.area(null).build();
+        SeatAreaResponseBuilder seatAreaResponseBuilder = SeatAreaResponse.builder()
+                        .id(seat.getId().toString()).cx(seat.getCx()).cy(seat.getCy()).row(seat.getRow())
+                        .number(seat.getRow()).area(AreaResponse.of(seat.getArea()));
+        return seatAreaResponseBuilder.build();
     }
 }

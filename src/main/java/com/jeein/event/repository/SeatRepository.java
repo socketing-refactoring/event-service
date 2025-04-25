@@ -19,4 +19,8 @@ public interface SeatRepository extends JpaRepository<Seat, UUID> {
     @Query("SELECT s FROM Seat s " + "JOIN s.area a " + "JOIN a.event e "
                     + "WHERE s.id IN :seatIds AND e.deletedAt IS NULL")
     List<Seat> findByIds(@Param("seatIds") List<UUID> seatIds);
+
+    @Query("SELECT s FROM Seat s " + "JOIN s.area a " + "JOIN a.event e "
+                    + "WHERE e.id = :eventId AND e.deletedAt IS NULL")
+    List<Seat> findByEventId(@Param("eventId") UUID eventId);
 }
