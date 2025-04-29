@@ -1,7 +1,7 @@
 package com.jeein.event.dto.response;
 
+import com.jeein.event.dto.feign.ReservationResponse;
 import com.jeein.event.entity.Seat;
-import com.jeein.event.feign.ReservationResponse;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

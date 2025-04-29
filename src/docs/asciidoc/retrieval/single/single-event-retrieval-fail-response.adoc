@@ -1,0 +1,14 @@
+// HTTP Response
+// include::{snippets}/event/retrieval/single/base/fail/http-response.adoc[opts=optional]
+//
+// Path Parameters
+// include::{snippets}/event/retrieval/single/base/fail/path-parameters.adoc[opts=optional]
+//
+// Response Headers
+// include::{snippets}/event/retrieval/single/base/fail/response-headers.adoc[opts=optional]
+//
+// Response Body
+// include::{snippets}/event/retrieval/single/base/fail/response-body.adoc[opts=optional]
+//
+// Response Fields
+// include::{snippets}/event/retrieval/single/base/fail/response-fields.adoc[opts=optional]

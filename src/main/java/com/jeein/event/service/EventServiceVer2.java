@@ -37,7 +37,7 @@ public class EventServiceVer2 {
             throw new EventException(ErrorCode.EVENT_SEAT_MISMATCH);
         }
 
-        SeatAreaResponse seatResponses = SeatAreaResponse.of(seat, includeArea);
+        SeatAreaResponse seatResponses = SeatAreaResponse.of(seat);
         return CommonResponse.success("공연 좌석 조회 성공", "0", seatResponses);
     }
 
@@ -63,7 +63,7 @@ public class EventServiceVer2 {
         }
 
         List<SeatAreaResponse> seatResponses =
-                        seats.stream().map(seat -> SeatAreaResponse.of(seat, includeArea)).toList();
+                        seats.stream().map(SeatAreaResponse::of).toList();
         return CommonResponse.success("공연 좌석 목록 조회 성공", "0", seatResponses);
     }
 }

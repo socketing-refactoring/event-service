@@ -2,6 +2,8 @@ package com.jeein.event.service;
 
 import com.jeein.event.ResponseMessage;
 import com.jeein.event.dto.CommonResponse;
+import com.jeein.event.dto.feign.ManagerResponseDTO;
+import com.jeein.event.dto.feign.ReservationResponse;
 import com.jeein.event.dto.request.EventRequest;
 import com.jeein.event.dto.response.AreaReservationStatistics;
 import com.jeein.event.dto.response.EventResponse;
@@ -13,12 +15,13 @@ import com.jeein.event.entity.Area;
 import com.jeein.event.entity.Event;
 import com.jeein.event.entity.EventDatetime;
 import com.jeein.event.entity.Seat;
+import com.jeein.event.exception.CustomFeignException;
 import com.jeein.event.exception.ErrorCode;
 import com.jeein.event.exception.EventException;
 import com.jeein.event.exception.OrderServiceFeignClientException;
 import com.jeein.event.exception.UploadException;
+import com.jeein.event.feign.MemberServiceFeignClient;
 import com.jeein.event.feign.OrderServiceFeignClient;
-import com.jeein.event.feign.ReservationResponse;
 import com.jeein.event.repository.EventRepository;
 import com.jeein.event.util.UploadManager;
 import java.io.IOException;
@@ -37,6 +40,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,6 +51,7 @@ public class EventService {
     private final EventRepository eventRepository;
     private final OrderServiceFeignClient orderServiceFeignClient;
     private final UploadManager uploadManager;
+    private final MemberServiceFeignClient memberServiceFeignClient;
 
     @Transactional(readOnly = true)
     public CommonResponse<List<EventResponse>> getEventList(String eventDatetimeId) {
@@ -73,12 +78,12 @@ public class EventService {
     }
 
     @Transactional(readOnly = true)
-    public CommonResponse<EventResponse> getOneEventDetails(String eventId) {
+    public CommonResponse<EventResponse> getOneEventDetails(String eventId, boolean excludeSeat) {
         Event event = eventRepository.findById(UUID.fromString(eventId))
                         .orElseThrow(() -> new EventException(ErrorCode.EVENT_NOT_FOUND));
-        EventResponse eventResponse = EventResponse.convertToDeatiledEvent(event);
 
-        return CommonResponse.success("단일 공연 상세 조회 성공", "0", eventResponse);
+        EventResponse eventResponse = EventResponse.convertToDeatiledEvent(event, excludeSeat);
+        return CommonResponse.success(ResponseMessage.SINGLE_EVENT_DETAIL_RETRIEVAL_SUCCESS, "0", eventResponse);
     }
 
     @Transactional(readOnly = true)
@@ -88,7 +93,7 @@ public class EventService {
 
         List<SeatResponse> seatResponse = event.getAreas().stream()
                         .flatMap(area -> area.getSeats().stream().map(SeatResponse::fromEntity)).toList();
-        return CommonResponse.success("공연 좌석 조회 성공", "0", seatResponse);
+        return CommonResponse.success(ResponseMessage.SEAT_LIST_RETRIEVAL_SUCCESS, "0", seatResponse);
     }
 
     @Transactional(readOnly = true)
@@ -154,7 +159,7 @@ public class EventService {
 
         Map<String, ReservationResponse> reservationMap = Optional.ofNullable(orderServiceResponse.getBody())
                         .map(CommonResponse::getData).orElse(Collections.emptyList()) // getData()가 null일 경우 빈
-                                                                                      // 리스트 반환
+                        // 리스트 반환
                         .stream().collect(Collectors.toMap(ReservationResponse::getSeatId,
                                         reservationResponse -> reservationResponse));
 
@@ -247,6 +252,16 @@ public class EventService {
     @Transactional
     public CommonResponse<EventResponse> saveEvent(EventRequest eventRequest, MultipartFile thumbnail,
                     String managerId) {
+
+        ResponseEntity<CommonResponse<ManagerResponseDTO>> managerResponse;
+        try {
+            memberServiceFeignClient.getOneManager(managerId);
+        } catch (CustomFeignException e) {
+            log.debug(e.getCode(), e.getMessage());
+            throw new EventException(ErrorCode.INVALID_TOKEN);
+        }
+
+        // 공연 제목 중복 검사
         Optional<Event> existingEvent = eventRepository.findByTitle(eventRequest.getTitle());
         if (existingEvent.isPresent()) {
             throw new EventException(ErrorCode.EVENT_ALREADY_EXISTS);
@@ -278,7 +293,7 @@ public class EventService {
         event.addAreas(areas);
 
         Event savedEvent = eventRepository.save(event);
-        EventResponse response = EventResponse.convertToDeatiledEvent(savedEvent);
+        EventResponse response = EventResponse.convertToDeatiledEvent(savedEvent, false);
         log.debug(response.getArtist());
 
         return CommonResponse.success(ResponseMessage.EVENT_CREATION_SUCCESS, "0", response);

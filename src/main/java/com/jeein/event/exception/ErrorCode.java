@@ -5,45 +5,34 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
-    INVALID_REQUEST_VALUE(HttpStatus.BAD_REQUEST, "C_001",
-                    "요청 데이터를 모두 올바르게 입력했는지 확인해 주세요."), INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C_002",
-                                    "요청 데이터의 타입이 올바르지 않습니다."), DATABASE_CONSTRAINT_ERROR(HttpStatus.CONFLICT,
-                                                    "C_003", "잘못된 요청 값입니다."), INVALID_CONTENT_TYPE(
-                                                                    HttpStatus.UNSUPPORTED_MEDIA_TYPE,
-                                                                    "C_004",
-                                                                    "지원되지 않는 미디어 타입입니다."), PAYLOAD_TOO_LARGE(
-                                                                                    HttpStatus.PAYLOAD_TOO_LARGE,
-                                                                                    "C_005",
-                                                                                    "요청 데이터의 크기가 너무 큽니다."), MULTIPART_NO_BOUNDARY(
-                                                                                                    HttpStatus.BAD_REQUEST,
-                                                                                                    "C_006",
-                                                                                                    "요청 헤더의 content type을 확인해 주세요."), INVALID_MULTIPARTFILE(
-                                                                                                                    HttpStatus.BAD_REQUEST,
-                                                                                                                    "C_007",
-                                                                                                                    "요청 데이터의 이미지가 유효하지 않습니다"), EMPTY_THUMBNAIL(
-                                                                                                                                    HttpStatus.BAD_REQUEST,
-                                                                                                                                    "C_008",
-                                                                                                                                    "포스터 이미지는 필수입니다."),
 
-    INVALID_TOKEN(HttpStatus.FORBIDDEN, "A_002", "접근이 허용되지 않은 사용자입니다"),
+    // 공통 에러
+    INVALID_REQUEST_VALUE(HttpStatus.BAD_REQUEST, "C_001", "요청 데이터를 모두 올바르게 입력했는지 확인해 주세요."),
+    INVALID_TYPE_VALUE(HttpStatus.BAD_REQUEST, "C_002", "요청 데이터의 타입이 올바르지 않습니다."),
+    DATABASE_CONSTRAINT_ERROR(HttpStatus.CONFLICT, "C_003", "잘못된 요청 값입니다."),
+    INVALID_CONTENT_TYPE(HttpStatus.UNSUPPORTED_MEDIA_TYPE, "C_004", "지원되지 않는 미디어 타입입니다."),
+    PAYLOAD_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE, "C_005", "요청 데이터의 크기가 너무 큽니다."),
+    MULTIPART_NO_BOUNDARY(HttpStatus.BAD_REQUEST, "C_006", "요청 헤더의 content type을 확인해 주세요."),
+    INVALID_MULTIPARTFILE(HttpStatus.BAD_REQUEST, "C_007", "요청 데이터의 이미지가 유효하지 않습니다."),
+    EMPTY_THUMBNAIL(HttpStatus.BAD_REQUEST, "C_008", "포스터 이미지는 필수입니다."),
 
-    EVENT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "E_001", "공연 제목이 이미 존재합니다."), EVENT_NOT_FOUND(
-                    HttpStatus.NOT_FOUND, "E_002",
-                    "공연을 찾을 수 없습니다."), EVENT_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "E_003",
-                                    "이미 삭제된 공연입니다."), SEAT_NOT_FOUND(HttpStatus.NOT_FOUND, "E_003",
-                                                    "좌석을 찾을 수 없습니다."), EVENT_SEAT_MISMATCH(
-                                                                    HttpStatus.CONFLICT, "E_004",
-                                                                    "공연 정보와 좌석 정보가 일치하지 않습니다."),
+    // 인증/인가 관련 에러
+    INVALID_TOKEN(HttpStatus.FORBIDDEN, "A_002", "접근이 허용되지 않은 사용자입니다."),
 
+    // 이벤트 관련 에러
+    EVENT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "E_001", "공연 제목이 이미 존재합니다."),
+    EVENT_NOT_FOUND(HttpStatus.NOT_FOUND, "E_002", "공연을 찾을 수 없습니다."),
+    EVENT_ALREADY_DELETED(HttpStatus.BAD_REQUEST, "E_003", "이미 삭제된 공연입니다."),
+    SEAT_NOT_FOUND(HttpStatus.NOT_FOUND, "E_004", "좌석을 찾을 수 없습니다."),
+    EVENT_SEAT_MISMATCH(HttpStatus.CONFLICT, "E_005", "공연 정보와 좌석 정보가 일치하지 않습니다."),
 
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_001", "서버에 오류가 발생했습니다."), UPLOAD_ERROR(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "S_002",
-                    "파일 업로드에 실패했습니다."), REQUEST_MAPPING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_003",
-                                    "요청 데이터 처리에 실패했습니다."), INVALID_ENTITY_VALUE(
-                                                    HttpStatus.INTERNAL_SERVER_ERROR, "S_004",
-                                                    "데이터베이스에 저장하려고 하는 데이터의 타입을 다시 확인해 주세요."), FEIGN_CONNECTION_ERROR(
-                                                                    HttpStatus.INTERNAL_SERVER_ERROR, "S_005",
-                                                                    "마이크로서비스 통신에 오류가 발생했습니다.");
+    // 서버 내부 에러
+    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_001", "서버에 오류가 발생했습니다."),
+    UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_002", "파일 업로드에 실패했습니다."),
+    REQUEST_MAPPING_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_003", "요청 데이터 처리에 실패했습니다."),
+    INVALID_ENTITY_VALUE(HttpStatus.INTERNAL_SERVER_ERROR, "S_004", "데이터베이스에 저장하려는 데이터의 타입을 다시 확인해 주세요."),
+    FEIGN_CONNECTION_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_005", "마이크로서비스 통신에 오류가 발생했습니다."),
+    FEIGN_PARSE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S_006", "마이크로서비스 오류 응답 처리에 실패했습니다.");
 
     private final String code;
     private final String message;
@@ -51,7 +40,7 @@ public enum ErrorCode {
 
     ErrorCode(HttpStatus status, String code, String message) {
         this.status = status;
-        this.message = message;
         this.code = code;
+        this.message = message;
     }
 }

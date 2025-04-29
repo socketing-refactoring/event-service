@@ -24,7 +24,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.IntStream;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -46,13 +45,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-@Slf4j
 @ActiveProfiles("test")
 @SpringBootTest
 @Transactional
+@TestInstance(Lifecycle.PER_CLASS)
 @ExtendWith(RestDocumentationExtension.class)
-@DisplayName("단일 공연 조회 테스트")
-public class SingleEventRetrievalSuccessTest {
+@DisplayName("좌석 목록 조회 테스트")
+public class SeatListRetrievalSuccessTest {
 
     @Autowired
     private WebApplicationContext context;
@@ -66,8 +65,7 @@ public class SingleEventRetrievalSuccessTest {
 
     @BeforeEach
     void setUp(WebApplicationContext webApplicationContext,
-                    RestDocumentationContextProvider restDocumentation) {
-
+        RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
             .apply(documentationConfiguration(restDocumentation)).defaultRequest(
                 post("/").accept(MediaType.APPLICATION_JSON_VALUE).contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -83,48 +81,17 @@ public class SingleEventRetrievalSuccessTest {
     }
 
     @Test
-    @DisplayName("단일 공연을 조회한다.")
+    @DisplayName("단일 공연의 좌석 목록을 조회한다.")
     void retrieveSingleEvent_success() throws Exception {
 
 
-        mockMvc.perform(get(ApiPath.EVENT + "/{eventId}", eventId)).andExpect(status().isOk())
-                        .andExpect(jsonPath("$.code").value("0"))
-                        .andExpect(jsonPath("$.message")
-                                        .value(ResponseMessage.SINGLE_EVENT_RETRIEVAL_SUCCESS))
-                        .andExpect(jsonPath("$.errors").doesNotExist()).andExpect(jsonPath("$.data").exists())
-                        .andDo(doc(DocumentIdentifier.SINGLE_EVENT_RETRIEVAL_DETAIL_SUCCESS,
-                                        EventSnippet.SINGLE_EVENT_PATH_PARAMETER,
-                                        EventSnippet.SINGLE_EVENT_RETRIEVAL_RESPONSE_FIELDS));
-    }
-
-    @Test
-    @DisplayName("단일 공연 상세 정보를 조회한다.")
-    void retrieveSingleEventDetailIncludeSeat_success() throws Exception {
-
-        mockMvc.perform(get(ApiPath.EVENT + "/{eventId}/detail", eventId)).andExpect(status().isOk())
+        mockMvc.perform(get(ApiPath.EVENT + "/{eventId}" + "/seats", eventId)).andExpect(status().isOk())
             .andExpect(jsonPath("$.code").value("0"))
             .andExpect(jsonPath("$.message")
-                .value(ResponseMessage.SINGLE_EVENT_DETAIL_RETRIEVAL_SUCCESS))
+                .value(ResponseMessage.SEAT_LIST_RETRIEVAL_SUCCESS))
             .andExpect(jsonPath("$.errors").doesNotExist()).andExpect(jsonPath("$.data").exists())
-            .andExpect(jsonPath("$.data.areas[0].seats").isArray())
-            .andDo(doc(DocumentIdentifier.SINGLE_EVENT_RETRIEVAL_DETAIL_WITHSEAT_SUCCESS,
-                EventSnippet.SINGLE_EVENT_QUERY_PARAMETER,
+            .andDo(doc(DocumentIdentifier.SEAT_LIST_RETRIEVAL_SUCCESS,
                 EventSnippet.SINGLE_EVENT_PATH_PARAMETER,
-                EventSnippet.SINGLE_EVENT_DETAIL_WITHSEAT_RETRIEVAL_RESPONSE_FIELDS));
-    }
-
-    @Test
-    @DisplayName("단일 공연 상세 정보를 조회하되 좌석 정보는 제외한다.")
-    void retrieveSingleEventDetailExcludeSeat_success() throws Exception {
-
-        mockMvc.perform(get(ApiPath.EVENT + "/{eventId}/detail?excludeSeat=true", eventId)).andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("0"))
-            .andExpect(jsonPath("$.message")
-                .value(ResponseMessage.SINGLE_EVENT_DETAIL_RETRIEVAL_SUCCESS))
-            .andExpect(jsonPath("$.errors").doesNotExist()).andExpect(jsonPath("$.data").exists())
-            .andDo(doc(DocumentIdentifier.SINGLE_EVENT_RETRIEVAL_DETAIL_NOSEAT_SUCCESS,
-                EventSnippet.SINGLE_EVENT_QUERY_PARAMETER,
-                EventSnippet.SINGLE_EVENT_PATH_PARAMETER,
-                EventSnippet.SINGLE_EVENT_DETAIL_NOSEAT_RETRIEVAL_RESPONSE_FIELDS));
+                EventSnippet.SEAT_LIST_RETRIEVAL_RESPONSE));
     }
 }

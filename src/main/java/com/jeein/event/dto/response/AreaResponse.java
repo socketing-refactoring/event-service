@@ -1,5 +1,7 @@
 package com.jeein.event.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.jeein.event.entity.Area;
 import java.util.List;
 import lombok.*;
@@ -8,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-// @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(Include.NON_NULL)
 public class AreaResponse {
     private String id;
     private String eventId;
@@ -18,6 +20,11 @@ public class AreaResponse {
 
     private List<SeatResponse> seats;
 
+    public static AreaResponse toResponseWithoutSeats(Area area) {
+        return AreaResponse.builder().id(area.getId().toString()).eventId(area.getEvent().getId().toString())
+            .label(area.getLabel()).price(area.getPrice()).areaMap(area.getAreaMap())
+            .build();
+    }
     public static AreaResponse fromEntity(Area area) {
         return AreaResponse.builder().id(area.getId().toString()).eventId(area.getEvent().getId().toString())
                         .label(area.getLabel()).price(area.getPrice()).areaMap(area.getAreaMap())

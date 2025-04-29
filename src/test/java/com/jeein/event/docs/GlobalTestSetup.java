@@ -1,6 +1,6 @@
 // package com.jeein.event.docs;
 //
-// import com.jeein.event.feign.JoinRequestDTO;
+// import com.jeein.event.dto.feign.JoinRequestDTO;
 // import com.jeein.event.feign.MemberServiceFeignClient;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.stereotype.Component;

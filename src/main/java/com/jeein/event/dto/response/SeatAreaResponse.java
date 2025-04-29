@@ -37,7 +37,7 @@ public class SeatAreaResponse {
         }
     }
 
-    public static SeatAreaResponse of(Seat seat, boolean includeArea) {
+    public static SeatAreaResponse of(Seat seat) {
         SeatAreaResponseBuilder seatAreaResponseBuilder = SeatAreaResponse.builder()
                         .id(seat.getId().toString()).cx(seat.getCx()).cy(seat.getCy()).row(seat.getRow())
                         .number(seat.getRow()).area(AreaResponse.of(seat.getArea()));

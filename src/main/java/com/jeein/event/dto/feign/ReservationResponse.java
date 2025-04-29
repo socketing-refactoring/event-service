@@ -1,4 +1,4 @@
-package com.jeein.event.feign;
+package com.jeein.event.dto.feign;
 
 import lombok.Getter;
 

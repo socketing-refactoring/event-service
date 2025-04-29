@@ -50,15 +50,25 @@ public class EventResponse {
                         .ticketingOpenTime(event.getTicketingOpenTime()).build();
     }
 
-    public static EventResponse convertToDeatiledEvent(Event event) {
-        return EventResponse.builder().id(event.getId().toString()).title(event.getTitle())
+    public static EventResponse convertToDeatiledEvent(Event event, boolean excludeSeat) {
+        EventResponseBuilder eventResponseBuilder =
+            EventResponse.builder().id(event.getId().toString()).title(event.getTitle())
                         .description(event.getDescription()).thumbnail(event.getThumbnail())
                         .place(event.getPlace()).artist(event.getArtist())
                         .eventDatetimes(event.getEventDatetimes().stream()
                                         .map(EventDatetimeResponse::convertToEventDatetimeResponseFromEntity)
                                         .toList())
                         .eventOpenTime(event.getEventOpenTime())
-                        .ticketingOpenTime(event.getTicketingOpenTime()).totalMap(event.getTotalMap())
-                        .areas(event.getAreas().stream().map(AreaResponse::fromEntity).toList()).build();
+                        .ticketingOpenTime(event.getTicketingOpenTime()).totalMap(event.getTotalMap());
+
+            if (excludeSeat) {
+                eventResponseBuilder
+                    .areas(event.getAreas().stream().map(AreaResponse::toResponseWithoutSeats).toList());
+            } else {
+                eventResponseBuilder
+                    .areas(event.getAreas().stream().map(AreaResponse::fromEntity).toList());
+            }
+
+        return eventResponseBuilder.build();
     }
 }

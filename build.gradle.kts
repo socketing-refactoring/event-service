@@ -25,6 +25,8 @@ java {
 
 spotless {
     java {
+        targetExclude("**/ErrorCode.java")
+
         removeUnusedImports()
         importOrder()
 //        googleJavaFormat().aosp()

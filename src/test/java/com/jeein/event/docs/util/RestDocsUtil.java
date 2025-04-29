@@ -17,5 +17,4 @@ public class RestDocsUtil {
         return document(identifier, preprocessRequest(new BinaryDataRemoverPreProcessor(), prettyPrint()),
                         preprocessResponse(prettyPrint()), snippets);
     }
-
 }

@@ -1,6 +1,7 @@
 package com.jeein.event.feign;
 
 import com.jeein.event.dto.CommonResponse;
+import com.jeein.event.dto.feign.ReservationResponse;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;

@@ -26,7 +26,7 @@ public class EventControllerVer2 {
      * 구체 정보 조회 API
      */
 
-    /* 단일 공연 좌석 조회 (area 정보 미포함) */
+    /* 단일 공연 좌석 조회 */
     @GetMapping("/{eventId}/seats/{seatId}")
     public ResponseEntity<CommonResponse<SeatAreaResponse>> getOneEventSeat(@PathVariable String eventId,
                     @PathVariable String seatId,

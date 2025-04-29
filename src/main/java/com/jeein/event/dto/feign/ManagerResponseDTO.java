@@ -1,11 +1,9 @@
-package com.jeein.event.feign;
+package com.jeein.event.dto.feign;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-public class JoinResponseDTO {
+public class ManagerResponseDTO {
     private String id;
     private String name;
     private String nickname;

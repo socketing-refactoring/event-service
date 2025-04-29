@@ -49,8 +49,9 @@ public class EventController {
 
     /* 단일 공연 상세 조회 (eventDatetimes, totalMap, areas, seats 포함) */
     @GetMapping("/{eventId}/detail")
-    public ResponseEntity<CommonResponse<EventResponse>> getOneEventDetails(@PathVariable String eventId) {
-        return ResponseEntity.ok(eventService.getOneEventDetails(eventId));
+    public ResponseEntity<CommonResponse<EventResponse>> getOneEventDetail(@PathVariable String eventId,
+        @RequestParam(required = false, defaultValue = "false") boolean excludeSeat) {
+        return ResponseEntity.ok(eventService.getOneEventDetails(eventId, excludeSeat));
     }
 
     /* 공연 정보 생성 (eventDatetimes, areas, seats 포함) */
@@ -136,5 +137,4 @@ public class EventController {
                     @PathVariable String eventId, @PathVariable String eventDatetimeId) {
         return ResponseEntity.ok(eventService.getAreaReservationStatistics(eventId, eventDatetimeId));
     }
-
 }

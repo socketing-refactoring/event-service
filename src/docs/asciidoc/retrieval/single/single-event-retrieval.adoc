@@ -14,3 +14,4 @@ include::single-event-retrieval-response.adoc[]
 
 단일 공연 조회 실패 시 발생할 수 있는 오류들을 분류하여 설명합니다.
 
+include::single-event-retrieval-fail-response.adoc[]

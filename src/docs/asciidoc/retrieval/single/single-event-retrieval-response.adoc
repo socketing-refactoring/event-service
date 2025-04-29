@@ -1,11 +1,14 @@
 HTTP Response
-include::{snippets}/event/retrieval/list/success/http-response.adoc[opts=optional]
+include::{snippets}/event/retrieval/single/base/success/http-response.adoc[opts=optional]
+
+Path Parameters
+include::{snippets}/event/retrieval/single/base/success/path-parameters.adoc[opts=optional]
 
 Response Headers
-include::{snippets}/event/retrieval/list/success/response-headers.adoc[opts=optional]
+include::{snippets}/event/retrieval/single/base/success/response-headers.adoc[opts=optional]
 
 Response Body
-include::{snippets}/event/retrieval/list/success/response-body.adoc[opts=optional]
+include::{snippets}/event/retrieval/single/base/success/response-body.adoc[opts=optional]
 
 Response Fields
-include::{snippets}/event/retrieval/list/success/response-fields.adoc[opts=optional]
+include::{snippets}/event/retrieval/single/base/success/response-fields.adoc[opts=optional]

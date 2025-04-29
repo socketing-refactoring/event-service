@@ -1,4 +1,4 @@
-package com.jeein.event.feign;
+package com.jeein.event.dto.feign;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

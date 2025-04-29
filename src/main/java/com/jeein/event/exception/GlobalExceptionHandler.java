@@ -2,6 +2,7 @@ package com.jeein.event.exception;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.jeein.event.dto.CommonResponse;
+import feign.FeignException;
 import jakarta.validation.ConstraintViolationException;
 import java.io.IOException;
 import lombok.extern.slf4j.Slf4j;
@@ -100,6 +101,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(IOException.class)
     protected ResponseEntity<CommonResponse<Object>> handleIOException(IOException e) {
+        log.error(e.getMessage());
+        CommonResponse<Object> response = CommonResponse.error(ErrorCode.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(response, ErrorCode.INTERNAL_SERVER_ERROR.getStatus());
+    }
+
+    @ExceptionHandler(FeignException.class)
+    protected ResponseEntity<CommonResponse<Object>> handleFeignException(FeignException e) {
         log.error(e.getMessage());
         CommonResponse<Object> response = CommonResponse.error(ErrorCode.INTERNAL_SERVER_ERROR);
         return new ResponseEntity<>(response, ErrorCode.INTERNAL_SERVER_ERROR.getStatus());
